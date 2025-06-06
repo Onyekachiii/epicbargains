@@ -64,8 +64,40 @@
                 <p>
                     {{product.description|safe|truncatechars:150}}
                 </p>
-                 
-        
+                <div class="action-item2">
+                    {% for variant in product.variants %}
+                        {% if variant.name == "Color" %}
+                            {% for option in variant.items %}
+                                <label class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="color"
+                                        id="color_{{ option.id }}" value="{{ option.content }}">
+                                    <span class="swatch" style="background-color:{{ option.content }}"></span>
+                                    {{ option.title }}
+                                </label>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="action-item3">
+                    <div class="action-top">
+                        <span class="action-title">Size : <strong> S</strong></span>
+                    </div>
+                    <div class="color-item2">
+                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="XXL">XXL</div>
+                    </div>
+                    <div class="color-item2">
+                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="XL">XL</div>
+                    </div>
+                    <div class="color-item2">
+                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="L">L</div>
+                    </div>
+                    <div class="color-item2">
+                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="M">M</div>
+                    </div>
+                    <div class="color-item2">
+                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="S">S</div>
+                    </div>
+                </div>
                 <div class="product-bottom-action">
                     <div class="cart-edit">
                         <div class="quantity-edit action-item">
@@ -151,7 +183,7 @@
             </div>
             <div class="full-details dls-three filterd-items hide">
                 <div class="full-details-inner">
-                    <p>There are no reveiws yet.</p>
+                    <p>There are no reviews yet.</p>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 mr-10">
                             <div class="reveiw-form">

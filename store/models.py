@@ -110,8 +110,6 @@ class Product(models.Model):
     def variants(self):
         return Variant.objects.filter(product=self)
 
-    # def vendor_orders(self):
-    #     return OrderItem.objects.filter(product=self, vendor=self.vendor)
 
     def save(self, *args, **kwargs):
         if not self.slug :

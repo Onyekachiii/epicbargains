@@ -21747,4 +21747,12 @@ button {
   bottom: -20px;
 }
 
+.swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 4px;
+  border: 1px solid #ccc;
+}
 /*# sourceMappingURL=main.css.map */
