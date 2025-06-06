@@ -95,6 +95,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+                
                 <div class="product-bottom-action">
                     <div class="cart-edit">
                         <div class="quantity-edit action-item">
@@ -103,14 +104,14 @@
                             <button class="button plus">+<i class="fal fa-plus plus"></i></button>
                         </div>
                     </div>
-                    <a href="/" class="addto-cart-btn action-item"><i class="rt-basket-shopping"></i> Add To
+                    <a href="/" class="addto-cart-btn action-item add_to_cart"><i class="rt-basket-shopping"></i> Add To
                         Cart</a>
                     <a href="/" class="wishlist-btn action-item"><i class="rt-heart"></i></a>
                 </div>
                 <div class="product-uniques">
                     <span class="sku product-unipue"><span>SKU: </span> {{product.sku}}</span>
-                    <span class="catagorys product-unipue"><span>Categories: </span> T-Shirts, Tops, Mens</span>
-                    <span class="tags product-unipue"><span>Tags: </span> fashion, t-shirts, Men</span>
+                    <span class="catagorys product-unipue"><span>Category: </span> {{product.category}}</span>
+    
                 </div>
                 <div class="share-social">
                     <span>Share:</span>
@@ -161,6 +162,7 @@
                                 {% for review in reviews|slice:":5" %}
                                     <li class="mb-3">
                                         <strong>{{ review.user.username|capfirst}}</strong>
+                                        <small class="d-block text-muted">{{ review.date|date:"F j, Y" }}</small>
                                         <span class="ms-2">{{ review.rating|default:"-" }}</span>
                                         <p class="mb-0">{{ review.review }}</p>
                                     </li>
@@ -249,27 +251,46 @@
                 </div>
             </div>
             <div class="row">
+                {% for p in related_products %}
                 <div class="col-xl-3 col-md-4 col-sm-6 col-12">
                     <div class="product-item element-item1">
-                        <a href="/" class="product-image image-hover-variations">
-                            <div class="image-vari1 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img13-1.webp" alt="product-image">
+                        <a href="{% url 'store:product_detail' p.slug %}" class="product-image image-hover-variations">
+                            <div class="image-vari1 image-vari"><img src="{{p.image.url}}" alt="product-image">
                             </div>
-                            <div class="image-vari2 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img13.webp" alt="product-image">
+                            <div class="image-vari2 image-vari"><img src="{{p.image.url}}" alt="product-image">
                             </div>
                         </a>
                         <div class="bottom-content">
                             <div class="star-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                                {% if not p.average_rating %}
+                                    <i class="fas fa-star"></i>
+                                {% elif p.average_rating > 0 and p.average_rating < 2 %}
+                                    <i class="fas fa-star"></i>
+                                {% elif p.average_rating > 1 and p.average_rating < 3 %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                {% elif p.average_rating > 2 and p.average_rating < 4 %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                {% elif p.average_rating > 3 and p.average_rating < 5 %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                {% elif p.average_rating > 4 %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+
+                                {% endif %}
                             </div>
-                            <a href="/" class="product-name">Girl's Sport Bra</a>
+                                <a href="" class="product-name">{{p.category.title}}</a><br>
+                                <a href="{% url 'store:product_detail' p.slug %}" class="product-name"><b>{{p.name}}</b></a>
                             <div class="action-wrap">
-                                <span class="price">$31.00</span>
+                                <span class="price">₦ {{p.price}}</span>
                             </div>
                         </div>
                         <div class="quick-action-button">
@@ -277,152 +298,18 @@
                                 <a href="#"><i class="rt-plus"></i></a>
                             </div>
                             <div class="cta-single cta-quickview">
-                                <a href="#"><i class="far fa-eye"></i></a>
+                                <button class="product-details-popup-btn"><i class="far fa-eye"></i></button>
                             </div>
                             <div class="cta-single cta-wishlist">
-                                <a href="#"><i class="far fa-heart"></i></a>
+                                <a href="/"><i class="far fa-heart"></i></a>
                             </div>
                             <div class="cta-single cta-addtocart">
-                                <a href="#"><i class="rt-basket-shopping"></i></a>
+                                <a href="/"><i class="rt-basket-shopping"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-                    <div class="product-item element-item1">
-                        <a href="/" class="product-image image-hover-variations">
-                            <div class="image-vari1 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img14.webp" alt="product-image">
-                            </div>
-                            <div class="image-vari2 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img14-1.webp" alt="product-image">
-                            </div>
-                        </a>
-                        <div class="bottom-content">
-                            <div class="star-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <a href="/" class="product-name">Girl's Sport Bra</a>
-                            <div class="action-wrap">
-                                <span class="price">$31.00</span>
-                            </div>
-                        </div>
-                        <div class="quick-action-button">
-                            <div class="cta-single cta-plus">
-                                <a href="#"><i class="rt-plus"></i></a>
-                            </div>
-                            <div class="cta-single cta-quickview">
-                                <a href="#"><i class="far fa-eye"></i></a>
-                            </div>
-                            <div class="cta-single cta-wishlist">
-                                <a href="#"><i class="far fa-heart"></i></a>
-                            </div>
-                            <div class="cta-single cta-addtocart">
-                                <a href="#"><i class="rt-basket-shopping"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-                    <div class="product-item element-item2">
-                        <a href="/" class="product-image image-slider-variations">
-                            <div class="swiper productSlide">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <div class="image-vari1 image-vari"><img
-                                                src="/static/images/hand-picked/slider-img12-1.webp"
-                                                alt="product-image">
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="image-vari2 image-vari"><img
-                                                src="/static/images/hand-picked/slider-img11_1.webp"
-                                                alt="product-image">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="slider-buttons">
-                                <div class="button-prev slider-btn"><i class="rt-arrow-left-long"></i></div>
-                                <div class="button-next slider-btn"><i class="rt-arrow-right-long"></i></div>
-                            </div>
-                        </a>
-                        <div class="bottom-content">
-                            <div class="star-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <a href="/" class="product-name">Maidenform Bra</a>
-                            <div class="action-wrap">
-                                <span class="price">$31.00</span>
-                            </div>
-                        </div>
-                        <div class="quick-action-button">
-                            <div class="cta-single cta-plus">
-                                <a href="#"><i class="rt-plus"></i></a>
-                            </div>
-                            <div class="cta-single cta-quickview">
-                                <a href="#"><i class="far fa-eye"></i></a>
-                            </div>
-                            <div class="cta-single cta-wishlist">
-                                <a href="#"><i class="far fa-heart"></i></a>
-                            </div>
-                            <div class="cta-single cta-addtocart">
-                                <a href="#"><i class="rt-basket-shopping"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-4 col-sm-6 col-12">
-                    <div class="product-item element-item1">
-                        <a href="/" class="product-image image-hover-variations">
-                            <div class="image-vari1 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img12.webp" alt="product-image">
-                            </div>
-                            <div class="image-vari2 image-vari"><img
-                                    src="/static/images/hand-picked/slider-img12-3.webp" alt="product-image">
-                            </div>
-                        </a>
-                        <div class="bottom-content">
-                            <div class="star-rating">
-                                <i class="far fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                            <a href="/" class="product-name">Hanes Women's Bra</a>
-                            <div class="action-wrap">
-                                <span class="price">$31.00</span>
-                            </div>
-                        </div>
-                        <div class="quick-action-button">
-                            <div class="cta-single cta-plus">
-                                <a href="#"><i class="rt-plus"></i></a>
-                            </div>
-                            <div class="cta-single cta-quickview">
-                                <a href="#"><i class="far fa-eye"></i></a>
-                            </div>
-                            <div class="cta-single cta-wishlist">
-                                <a href="#"><i class="far fa-heart"></i></a>
-                            </div>
-                            <div class="cta-single cta-addtocart">
-                                <a href="#"><i class="rt-basket-shopping"></i></a>
-                            </div>
-                        </div>
-                        <div class="product-features">
-                            <div class="discount-tag product-tag">-38%</div>
-                            <div class="new-tag product-tag">HOT</div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

@@ -1194,25 +1194,18 @@
   });
 
   $(function () {
-    $(".button").on("click", function () {
-      var $button = $(this);
-      var $parent = $button.parent();
-      var oldValue = $parent.find('.input').val();
-
-      if ($button.text() == "+") {
-        var newVal = parseFloat(oldValue) + 1;
+    $('.quantity-edit .button').on('click', function () {
+      const $input = $(this).siblings('.input');
+      let val = parseInt($input.val()) || 1;
+      if ($(this).hasClass('plus')) {
+        val += 1;
       } else {
-        // Don't allow decrementing below zero
-        if (oldValue > 1) {
-          var newVal = parseFloat(oldValue) - 1;
-        } else {
-          newVal = 1;
-        }
+        val = Math.max(1, val - 1);
       }
-      $parent.find('a.add-to-cart').attr('data-quantity', newVal);
-      $parent.find('.input').val(newVal);
+      $input.val(val);
     });
   });
+  
   var countdown = $('.countdown');
 
   if (countdown.length) {

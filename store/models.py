@@ -85,7 +85,7 @@ class Product(models.Model):
     status = models.CharField(choices=STATUS, max_length=50, default="Published")
     featured = models.BooleanField(default=False, verbose_name="Marketplace Featured")
     
-    vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True)
+    # vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True)
     
     sku = ShortUUIDField(unique=True, length=5, max_length=50, prefix="SKU", alphabet="1234567890")
     slug = models.SlugField(null=True, blank=True)
