@@ -64,49 +64,55 @@
                 <p>
                     {{product.description|safe|truncatechars:150}}
                 </p>
-                <div class="action-item2">
-                    {% for variant in product.variants %}
-                        {% if variant.name == "Color" %}
-                            {% for option in variant.items %}
-                                <label class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="color"
-                                        id="color_{{ option.id }}" value="{{ option.content }}">
-                                    <span class="swatch" style="background-color:{{ option.content }}"></span>
-                                    {{ option.title }}
-                                </label>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="action-item3">
-                    {% for variant in product.variants %}
-                        {% if variant.name == "Size" %}
-                            <div class="action-item3">
-                                <div class="action-top">
-                                    <span class="action-title">Size :</span>
-                                </div>
+                <form method="post" action="{% url 'store:add_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ product.id }}">
+                    <input type="hidden" name="cart_id" value="{{ request.session.cart_id }}">
+
+                    <div class="action-item2">
+                        {% for variant in product.variants %}
+                            {% if variant.name == "Color" %}
                                 {% for option in variant.items %}
-                                    <label class="form-check form-check-inline color-item2">
-                                        <input class="form-check-input" type="radio" name="size" id="size_{{ option.id }}" value="{{ option.content }}">
-                                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ option.title }}">{{ option.content }}</div>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="color"
+                                            id="color_{{ option.id }}" value="{{ option.content }}">
+                                        <span class="swatch" style="background-color:{{ option.content }}"></span>
+                                        {{ option.title }}
                                     </label>
                                 {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="product-bottom-action">
-                    <div class="cart-edit">
-                        <div class="quantity-edit action-item">
-                            <button class="button"><i class="fal fa-minus minus"></i></button>
-                            <input type="text" class="input" value="01" />
-                            <button class="button plus">+<i class="fal fa-plus plus"></i></button>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <a href="/" class="addto-cart-btn action-item"><i class="rt-basket-shopping"></i> Add To
-                        Cart</a>
-                    <a href="/" class="wishlist-btn action-item"><i class="rt-heart"></i></a>
-                </div>
+                    <div class="action-item3">
+                        {% for variant in product.variants %}
+                            {% if variant.name == "Size" %}
+                                <div class="action-item3">
+                                    <div class="action-top">
+                                        <span class="action-title">Size :</span>
+                                    </div>
+                                    {% for option in variant.items %}
+                                        <label class="form-check form-check-inline color-item2">
+                                            <input class="form-check-input" type="radio" name="size" id="size_{{ option.id }}" value="{{ option.content }}">
+                                            <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ option.title }}">{{ option.content }}</div>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="product-bottom-action">
+                        <div class="cart-edit">
+                            <div class="quantity-edit action-item">
+                                <button class="button"><i class="fal fa-minus minus"></i></button>
+                                <input type="number" class="input" name="qty" value="1" min="1" />
+                                <button class="button plus">+<i class="fal fa-plus plus"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="addto-cart-btn action-item"><i class="rt-basket-shopping"></i> Add To
+                            Cart</button>
+                        <a href="/" class="wishlist-btn action-item"><i class="rt-heart"></i></a>
+                    </div>
+                </form>
                 <div class="product-uniques">
                     <span class="sku product-unipue"><span>SKU: </span> {{product.sku}}</span>
                     <span class="catagorys product-unipue"><span>Categories: </span> T-Shirts, Tops, Mens</span>
