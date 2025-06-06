@@ -236,4 +236,6 @@ class Review(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} review on {self.product.name}"
+        user = self.user.username if self.user else "Anonymous"
+        product_name = self.product.name if self.product else "Unknown product"
+        return f"{user} review on {product_name}"
