@@ -67,12 +67,12 @@
                 <div class="action-item2">
                     {% for variant in product.variants %}
                         {% if variant.name == "Color" %}
-                            {% for option in variant.items %}
+                            {% for c in variant.items.all %}
                                 <label class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="color"
-                                        id="color_{{ option.id }}" value="{{ option.content }}">
-                                    <span class="swatch" style="background-color:{{ option.content }}"></span>
-                                    {{ option.title }}
+                                        id="{{ c.content }}" value="{{ c.content }}">
+                                    <span class="swatch" style="background-color:{{ c.content }}"></span>
+                                    {{ c.title }}
                                 </label>
                             {% endfor %}
                         {% endif %}
@@ -85,10 +85,10 @@
                                 <div class="action-top">
                                     <span class="action-title">Size :</span>
                                 </div>
-                                {% for option in variant.items %}
+                                {% for s in variant.items.all %}
                                     <label class="form-check form-check-inline color-item2">
-                                        <input class="form-check-input" type="radio" name="size" id="size_{{ option.id }}" value="{{ option.content }}">
-                                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ option.title }}">{{ option.content }}</div>
+                                        <input class="form-check-input" type="radio" name="size" id="{{ s.content }}" value="{{ s.title }}">
+                                        <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ s.title }}">{{ s.content }}</div>
                                     </label>
                                 {% endfor %}
                             </div>
@@ -98,13 +98,13 @@
                 
                 <div class="product-bottom-action">
                     <div class="cart-edit">
-                        <div class="quantity-edit action-item">
+                        <div class="quantity-edit action-item quantity" id="quantity" name="quantity">
                             <button class="button"><i class="fal fa-minus minus"></i></button>
-                            <input type="text" class="input" value="01" />
+                            <input type="text" class="input quantity" value="01" />
                             <button class="button plus">+<i class="fal fa-plus plus"></i></button>
                         </div>
                     </div>
-                    <a href="/" class="addto-cart-btn action-item add_to_cart"><i class="rt-basket-shopping"></i> Add To
+                    <a href="" class="addto-cart-btn action-item add_to_cart" data-id="{{product.id}}"><i class="rt-basket-shopping"></i> Add To
                         Cart</a>
                     <a href="/" class="wishlist-btn action-item"><i class="rt-heart"></i></a>
                 </div>
@@ -177,7 +177,7 @@
                                         {% for review in reviews|slice:"5:" %}
                                             <li class="mb-3">
                                                 <strong>{{ review.user.username }}</strong>
-                                                <span class="ms-2">{{ review.rating|default:"-" }}</span>
+                                                <span class="ms-2">{{ review.rating|default:"-" }} </span>
                                                 <p class="mb-0">{{ review.review }}</p>
                                             </li>
                                         {% endfor %}
