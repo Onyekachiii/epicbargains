@@ -111,109 +111,35 @@
                     <div class="rts-menu">
                         <nav class="menus menu-toggle">
                             <ul class="nav__menu">
-                                <li class="has-dropdown"><a class="menu-item {% if subTitle == 'Home' %}
-                                                                                 active1
-                                                                              {% endif %}" href="#">Home <i class="rt-plus"></i></a>
-                                    <ul class="dropdown-ul">
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Main
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Fashion
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Fashion
-                                                Home Two</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Furniture
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Decor
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Electronics
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Grocery
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Footwear
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Gaming
-                                                Home</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="#">Sunglass
-                                                Home</a>
-                                        </li>
-                                    </ul>
+                                <li class="has-dropdown"><a class="menu-item" href="{% url 'store:index' %}">Home </a>
+                                    
                                 </li>
-                                <li class="has-dropdown"><a class="menu-item {% if subTitle == 'Shop' %}
-                                                                                    active1
-                                                                             {% endif %}" href="#">Shop <i class="rt-plus"></i></a>
-                                    <ul class="dropdown-ul mega-dropdown">
-                                        <li class="mega-dropdown-li">
-                                            <ul class="mega-dropdown-ul">
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Shop</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Left Sidebar Shop</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Right Sidebar Shop</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Full Width Shop</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="mega-dropdown-li">
-                                            <ul class="mega-dropdown-ul">
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Single Product Layout One</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Single Product Layout Two</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Variable
-                                                        Product</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Grouped
-                                                        Product</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="mega-dropdown-li last-child">
-                                            <ul class="mega-dropdown-ul">
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Cart</a>
-                                                </li>
-
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">Checkout</a>
-                                                </li>
-                                                <li class="dropdown-li"><a class="dropdown-link2" href="/">My Account</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                <li class="has-dropdown"><a class="menu-item " href="#">Shop </a>
+                                   
+                                </li>
+                                <li class="has-dropdown"><a class="menu-item " href="#">About </a>
+                               
                                 </li>
                                 <li class="has-dropdown"><a class="menu-item menu-item {% if subTitle == 'Pages' %}
                                                                                           active1
                                                                                        {% endif %} " href="#">Pages <i class="rt-plus"></i></a>
                                     <ul class="dropdown-ul">
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">About</a>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Cart</a>
                                         </li>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Wishlist</a>
+                                        </li>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Account</a>
+                                        </li>
+                                        
                                         <li class="dropdown-li"><a class="dropdown-link" href="/">FAQ's</a>
                                         </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Error
-                                                404</a>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Sign In</a>
+                                        </li>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Register</a>
                                         </li>
                                     </ul>
                                 </li>
-
-                                <li class="has-dropdown"><a class="menu-item menu-item {% if subTitle == 'Blog' %}
-                                                                                            active1
-                                                                                        {% endif %}" href="#">Blog <i class="rt-plus"></i></a>
-                                    <ul class="dropdown-ul">
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Blog</a>
-                                        </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Blog Grid</a></li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Blog Details</a></li>
-                                    </ul>
-                                </li>
+                                
                                 <li><a class="menu-item menu-item {% if subTitle == 'Contact' %}
                                                                     active1
                                                                   {% endif %} " href="/">Contact</a></li>
@@ -252,12 +178,12 @@
                         <a href="/" class="account"><i class="rt-user-2"></i></a>
                         <div class="cart action-item">
                             <div class="cart-nav">
-                                <div class="cart-icon icon"><a href="#0"><i aria-hidden="true" class="fas fa-shopping-cart"></i></a><span class="wishlist-dot icon-dot total_cart_items">0</span></div>
+                                <div class="cart-icon icon"><a href="{% url 'store:cart' %}"><i aria-hidden="true" class="fas fa-shopping-basket"></i></a><span class="wishlist-dot icon-dot total_cart_items">{{total_cart_items.count}}</span></div>
                             </div>
                         </div>
                         <div class="cart action-item">
                             <div class="cart-nav">
-                                <div class="cart-icon icon"><a href="#0"><i aria-hidden="true" class="fas fa-shopping-basket"></i></a><span class="wishlist-dot icon-dot">3</span></div>
+                                <div class="cart-icon icon"><a href="#0"><i aria-hidden="true" class="fas fa-heart"></i></a><span class="wishlist-dot icon-dot">3</span></div>
                             </div>
                         </div>
                     </div>
@@ -265,102 +191,7 @@
             </div>
         </div>
     </div>
-    <div class="cart-bar">
-        <div class="cart-header">
-            <h3 class="cart-heading">MY CART (3 ITEMS)</h3>
-            <div class="close-cart"><i class="fal fa-times"></i></div>
-        </div>
-        <div class="product-area">
-            <div class="product-item">
-                <div class="product-detail">
-                    <div class="product-thumb"><img src="/static/images/slider/image1.jpg" alt="product-thumb"></div>
-                    <div class="item-wrapper">
-                        <span class="product-name">Parachute Jacket</span>
-                        <div class="item-wrapper">
-                            <span class="product-variation"><span class="color">Green /</span>
-                                <span class="size">XL</span></span>
-                        </div>
-                        <div class="item-wrapper">
-                            <span class="product-qnty">3 ×</span>
-                            <span class="product-price">$198.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="cart-edit">
-                    <div class="quantity-edit">
-                        <button class="button"><i class="fal fa-minus minus"></i></button>
-                        <input type="text" class="input" value="3" />
-                        <button class="button plus">+<i class="fal fa-plus plus"></i></button>
-                    </div>
-                    <div class="item-wrapper d-flex mr--5 align-items-center">
-                        <a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-                        <a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="product-detail">
-                    <div class="product-thumb"><img src="/static/images/slider/image2.jpg" alt="product-thumb"></div>
-                    <div class="item-wrapper">
-                        <span class="product-name">Narrow Trouser</span>
-                        <div class="item-wrapper">
-                            <span class="product-variation"><span class="color">Green /</span>
-                                <span class="size">XL</span></span>
-                        </div>
-                        <div class="item-wrapper">
-                            <span class="product-qnty">2 ×</span>
-                            <span class="product-price">$88.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="cart-edit">
-                    <div class="quantity-edit">
-                        <button class="button"><i class="fal fa-minus minus"></i></button>
-                        <input type="text" class="input" value="2" />
-                        <button class="button plus">+<i class="fal fa-plus plus"></i></button>
-                    </div>
-                    <div class="item-wrapper d-flex mr--5 align-items-center">
-                        <a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-                        <a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item last-child">
-                <div class="product-detail">
-                    <div class="product-thumb"><img src="/static/images/slider/image5.jpg" alt="product-thumb"></div>
-                    <div class="item-wrapper">
-                        <span class="product-name">Bellyless Hoodie</span>
-                        <div class="item-wrapper">
-                            <span class="product-variation"><span class="color">Green /</span>
-                                <span class="size">XL</span></span>
-                        </div>
-                        <div class="item-wrapper">
-                            <span class="product-qnty">1 ×</span>
-                            <span class="product-price">$289.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="cart-edit">
-                    <div class="quantity-edit">
-                        <button class="button"><i class="fal fa-minus minus"></i></button>
-                        <input type="text" class="input" value="2" />
-                        <button class="button plus">+<i class="fal fa-plus plus"></i></button>
-                    </div>
-                    <div class="item-wrapper d-flex mr--5 align-items-center">
-                        <a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-                        <a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="cart-bottom-area">
-            <span class="spend-shipping"><i class="fal fa-truck"></i> SPENT <span class="amount">$199.00</span> MORE
-                FOR FREE SHIPPING</span>
-            <span class="total-price">TOTAL: <span class="price">$556</span></span>
-            <a href="/" class="checkout-btn cart-btn">PROCEED TO CHECKOUT</a>
-            <a href="/" class="view-btn cart-btn">VIEW CART</a>
-        </div>
-    </div>
+    
     <!-- slide-bar start -->
     <aside class="slide-bar">
         <div class="offset-sidebar">
@@ -372,16 +203,16 @@
                 <div class="info-widget">
                     <img src="/static/images/logo1.png" alt="">
                     <p class="mb-30">
-                        We must explain to you how all seds this mistakens idea denouncing pleasures and praising account.
+                        "Every click is a step closer to something better — shop with purpose, live with style."
                     </p>
                 </div>
                 <div class="info-widget info-widget2">
                     <h4 class="offset-title mb-20">Get In Touch </h4>
                     <ul>
-                        <li class="info phone"><a href="tel:78090790890208806803">780 907 908 90, 208 806 803</a></li>
-                        <li class="info email"><a href="email:pixcelsthemes@gmail.com">pixcelsthemes@gmail.com</a></li>
-                        <li class="info web"><a href="www.webexample.com">www.webexample.com</a></li>
-                        <li class="info location">13/A, New Pro State, NYC</li>
+                        <li class="info phone"><a href="tel:+234 8188844722">+2348188844722, +2348188844711</a></li>
+                        <li class="info email"><a href="email:pixcelsthemes@gmail.com">info@epicbargains.com</a></li>
+                        
+                        <li class="info location">121 Ikorodu Road, Onipanu, Lagos</li>
                     </ul>
                     <div class="offset-social-link">
                         <h4 class="offset-title mb-20">Follow Us </h4>
@@ -401,136 +232,45 @@
         <nav class="side-mobile-menu side-mobile-menu1">
             <ul id="mobile-menu-active">
                 <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="/">Home <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu">
-                        <li><a href="/">Main Home</a></li>
-                        <li><a href="/">Fashion Home</a></li>
-                        <li><a href="/">Fashion Home Two</a></li>
-                        <li><a href="/">Furniture Home</a></li>
-                        <li><a href="/">Decor Home</a></li>
-                        <li><a href="/">Electronics Home</a></li>
-                        <li><a href="/">Grocery Home</a></li>
-                        <li><a href="/">Footwear Home</a></li>
-                        <li><a href="/">Gaming Home</a></li>
-                        <li><a href="/">Sunglass Home</a></li>
-                    </ul>
+                    <a class="mm-link" href="{% url 'store:index' %}">Home </a>
+                    
                 </li>
                 <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="/">Shop <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu mega-dropdown-mobile">
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Left Sidebar
-                                        Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Right Sidebar
-                                        Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Full
-                                        Width Shop</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Single Product
-                                        Layout
-                                        One</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Single Product Layout
-                                        Two</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Variable Product</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Grouped Product</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Cart
-                                    </a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Checkout</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">My
-                                        Account</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <a class="mm-link" href="/">Shop </a>
+                    
+                </li>
+                <li class="has-dropdown firstlvl">
+                    <a class="mm-link" href="/">About</a>
+                    
                 </li>
                 <li class="has-dropdown firstlvl">
                     <a class="mm-link" href="/">Pages <i class="rt-angle-down"></i></a>
                     <ul class="sub-menu">
-                        <li><a href=".">About</a></li>
+                        <li><a href=".">Cart</a></li>
+                        <li><a href="/">Wishlist</a></li>
+                        <li><a href="/">Account</a></li>
                         <li><a href="/">FAQ's</a></li>
-                        <li><a href="/">Error 404</a></li>
+                        <li><a href="/">Sign In</a></li>
+                        <li><a href="/">Register</a></li>
+                        
                     </ul>
                 </li>
-                <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="/">Blog <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu">
-                        <li><a href="/">Blog</a></li>
-                        <li><a href="/">Blog Grid</a></li>
-                        <li><a href="/">Blog Details</a></li>
-                    </ul>
-                </li>
+                
                 <li><a class="mm-link" href="/">Contact</a></li>
             </ul>
         </nav>
-        <div class="header-action-items header-action-items1 header-action-items-side">
-            <div class="search-part">
-                <div class="search-icon action-item icon"><i class="rt-search"></i></div>
-                <div class="search-input-area">
-                    <div class="container">
-                        <div class="search-input-inner">
-                            <select id="custom-select">
-                                <option value="hide">All Catagory</option>
-                                <option value="all">All</option>
-                                <option value="men">Men</option>
-                                <option value="women">Women</option>
-                                <option value="shoes">Shoes</option>
-                                <option value="shoes">Glasses</option>
-                                <option value="shoes">Bags</option>
-                                <option value="shoes">Assesories</option>
-                            </select>
-                            <div class="input-div">
-                                <div class="search-input-icon"><i class="rt-search mr--10"></i></div>
-                                <input class="search-input" type="text" placeholder="Search by keyword or #">
-                            </div>
-                            <div class="search-close-icon"><i class="rt-xmark"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="cart action-item">
-                <div class="cart-nav">
-                    <div class="cart-icon icon"><i class="rt-cart"></i><span class="wishlist-dot icon-dot">3</span>
-                    </div>
-                </div>
-            </div>
-            <div class="wishlist action-item">
-                <div class="favourite-icon icon"><i class="rt-heart"></i><span class="cart-dot icon-dot">0</span>
-                </div>
-            </div>
-            <a href="/" class="account"><i class="rt-user-2"></i></a>
-        </div>
+        
         <!-- side-mobile-menu end -->
     </aside>
-    <div class="page-path">
-        <div class="container">
-            <div class="breadcrumbs-inner">
-                <h1 class="path-title">{{title}}</h1>
-                <ul>
-                    <li><a class="home-page-link" href="/">{{subTitle}}<i class="fal fa-angle-right"></i></a></li>
-                    <li><a class="current-page" href="#">{{subTitle2}}</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
+    {% for message in messages %}
+        {% if message %}
+        <div class="alert alert-{{message.tag}}">
+            <strong>{{ message }}</strong>
+        </div> 
+        {% endif %}
+    {% endfor %}
+
 </header>
 
 <body>
@@ -541,9 +281,9 @@
 
     <div class="anywere"></div>
 
-        {% if title %}
+        {% comment %} {% if title %}
         {% include  '../partials/header.html' %}
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         {% block content %}
 
@@ -558,6 +298,7 @@
 
     <!-- ..::Jquery latest version::.. -->
     <script src="/static/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- ..::Bootstrap latest version::.. -->
     <script src="/static/js/vendors/bootstrap.min.js"></script>
     <!-- ..::Wow.js::.. -->

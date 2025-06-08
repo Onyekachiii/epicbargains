@@ -2,6 +2,17 @@
 
 {% block content %}
 
+<div class="page-path">
+    <div class="container">
+        <div class="breadcrumbs-inner">
+            <h1 class="path-title">Product Detail</h1>
+            <ul>
+                <li><a class="home-page-link" href="{% url 'store:index' %}">Home<i class="fal fa-angle-right"></i></a></li>
+                <li><a class="current-page" href="#">Product Detail</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <!-- ..::Product-details Section Start Here::.. -->
 <div class="rts-product-details-section section-gap">
@@ -87,7 +98,7 @@
                                 </div>
                                 {% for s in variant.items.all %}
                                     <label class="form-check form-check-inline color-item2">
-                                        <input class="form-check-input" type="radio" name="size" id="{{ s.content }}" value="{{ s.title }}">
+                                        <input class="form-check-input" type="radio" name="size" id="{{ s.content }}" value="{{ s.content }}">
                                         <div class="size" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ s.title }}">{{ s.content }}</div>
                                     </label>
                                 {% endfor %}
@@ -104,13 +115,13 @@
                             <button class="button plus">+<i class="fal fa-plus plus"></i></button>
                         </div>
                     </div>
-                    <a href="" class="addto-cart-btn action-item add_to_cart" data-id="{{product.id}}"><i class="rt-basket-shopping"></i> Add To
+                    <a href="#" class="addto-cart-btn action-item add_to_cart" data-id="{{product.id}}"><i class="rt-basket-shopping"></i> Add To
                         Cart</a>
                     <a href="/" class="wishlist-btn action-item"><i class="rt-heart"></i></a>
                 </div>
                 <div class="product-uniques">
                     <span class="sku product-unipue"><span>SKU: </span> {{product.sku}}</span>
-                    <span class="catagorys product-unipue"><span>Category: </span> {{product.category}}</span>
+                    <span class="catagorys product-unipue"><span>Category: </span>{{product.category}}</span>
     
                 </div>
                 <div class="share-social">

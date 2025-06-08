@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.db.models import Q, Avg, Sum
 
+
 from decimal import Decimal
 import requests
 import stripe
@@ -42,6 +43,8 @@ def index(request):
         "categories": categories,
     }
     return render(request, "store/index.html", context)
+
+
 
 # def shop(request):
 #     products_list = store_models.Product.objects.filter(status="Published")
@@ -121,7 +124,8 @@ def product_detail(request, slug):
     context = {
         "product": product,
         "product_stock_range": product_stock_range,
-        "related_products": related_products,
+        "related_products": related_products
+        
     }
     return render(request, "store/product_detail.html", context)
 
@@ -152,6 +156,8 @@ def add_to_cart(request):
     if int(qty) > product.stock:
         return JsonResponse({"error": "Qty exceeds current stock amount"}, status=404)
 
+    cart = None 
+    
     # If the item is not in the cart, create a new cart entry
     if not existing_cart_item:
         cart = store_models.Cart()
@@ -183,70 +189,73 @@ def add_to_cart(request):
 
         message = "Cart updated"
 
-    # Count the total number of items in the cart
-    total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(cart_id=cart_id))
-    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(cart_id=cart_id)).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
+    # Total items count and cart subtotal
+    total_cart_items = store_models.Cart.objects.filter(cart_id=cart_id).count()
+    cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(
+    sub_total=models.Sum("sub_total")
+)['sub_total'] or 0
 
-    # Return the response with the cart update message and total cart items
+    # Return safe response
     return JsonResponse({
-        "message": message ,
-        "total_cart_items": total_cart_items.count(),
+        "message": message,
+        "total_cart_items": total_cart_items,
         "cart_sub_total": "{:,.2f}".format(cart_sub_total),
-        "item_sub_total": "{:,.2f}".format(existing_cart_item.sub_total) if existing_cart_item else "{:,.2f}".format(cart.sub_total) 
+        "item_sub_total": "{:,.2f}".format(existing_cart_item.sub_total if existing_cart_item else (cart.sub_total if cart else 0)
+    )
     })
 
-# def cart(request):
-#     if "cart_id" in request.session:
-#         cart_id = request.session['cart_id']
-#     else:
-#         cart_id = None
 
-#     items = store_models.Cart.objects.filter(cart_id=cart_id)
-#     cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
+def cart(request):
+    cart_id = request.session.get('cart_id')
+
+    query = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    items = query
+    cart_sub_total = query.aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
+
+    try:
+        addresses = customer_models.Address.objects.filter(user=request.user)
+    except:
+        addresses = None
+
+    if not items:
+        messages.warning(request, "No item in cart")
+        return redirect("store:index")
+
+    context = {
+        "items": items,
+        "cart_sub_total": cart_sub_total,
+        "addresses": addresses
+    }
+    return render(request, "store/cart.html", context)
+
+
+def delete_cart_item(request):
+    id = request.GET.get("id")
+    item_id = request.GET.get("item_id")
+    cart_id = request.GET.get("cart_id")
     
-#     try:
-#         addresses = customer_models.Address.objects.filter(user=request.user)
-#     except:
-#         addresses = None
+    # Validate required fields
+    if not id and not item_id and not cart_id:
+        return JsonResponse({"error": "Item or Product id not found"}, status=400)
 
-#     if not items:
-#         messages.warning(request, "No item in cart")
-#         return redirect("store:index")
+    try:
+        product = store_models.Product.objects.get(status="Published", id=id)
+    except store_models.Product.DoesNotExist:
+        return JsonResponse({"error": "Product not found"}, status=404)
 
-#     context = {
-#         "items": items,
-#         "cart_sub_total": cart_sub_total,
-#         "addresses": addresses,
-#     }
-#     return render(request, "store/cart.html", context)
+    # Check if the item is already in the cart
+    item = store_models.Cart.objects.get(product=product, id=item_id)
+    item.delete()
 
-# def delete_cart_item(request):
-#     id = request.GET.get("id")
-#     item_id = request.GET.get("item_id")
-#     cart_id = request.GET.get("cart_id")
-    
-#     # Validate required fields
-#     if not id and not item_id and not cart_id:
-#         return JsonResponse({"error": "Item or Product id not found"}, status=400)
+    # Count the total number of items in the cart
+    total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
 
-#     try:
-#         product = store_models.Product.objects.get(status="Published", id=id)
-#     except store_models.Product.DoesNotExist:
-#         return JsonResponse({"error": "Product not found"}, status=404)
-
-#     # Check if the item is already in the cart
-#     item = store_models.Cart.objects.get(product=product, id=item_id)
-#     item.delete()
-
-#     # Count the total number of items in the cart
-#     total_cart_items = store_models.Cart.objects.filter(cart_id=cart_id)
-#     cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
-
-#     return JsonResponse({
-#         "message": "Item deleted",
-#         "total_cart_items": total_cart_items.count(),
-#         "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
-#     })
+    return JsonResponse({
+        "message": "Item deleted",
+        "total_cart_items": total_cart_items.count(),
+        "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
+    })
 
 # def create_order(request):
 #     if request.method == "POST":

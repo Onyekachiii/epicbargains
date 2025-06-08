@@ -3,9 +3,9 @@ console.log ("working...")
 
 $(document).ready(function(){
     const Toast = Swal.mixin({
-        toast: True,
+        toast: true,
         position: "top",
-        showConfirmationButton: false,
+        showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
     });
@@ -25,13 +25,18 @@ $(document).ready(function(){
         return ls_cartid || cartId
     }
 
-    $(document).on("click", ".add_to_cart", function (){
+    $(document).on("click", ".add_to_cart", function (e){
+        e.preventDefault();
         const button_el = $(this)
         const id = button_el.attr("data-id")
-        const qty = $(".quantity").val()
+
+        let qty = $(this).closest(".product-bottom-action").find("input.quantity").val();
+        qty = qty && !isNaN(qty) && Number(qty) > 0 ? qty : 1;
+
+        // const qty = $(this).closest(".product-bottom-action").find("input.quantity").val();
         const size = $("input[name='size']:checked").val()
         const color = $("input[name='color']:checked").val()
-        const cart_id = genarateCartId()
+        const cart_id = generateCartId()
 
         $.ajax({
             url:"/add_to_cart/",
@@ -44,7 +49,7 @@ $(document).ready(function(){
                 
             },
             beforeSend: function(){
-                button_el.html("Adding to cart <i class='fas fa-spinner fa-spin ms-2'><>");
+                button_el.html("Adding to cart <i class='fas fa-spinner fa-spin ms-2'></i>");
             },
             success: function(response){
                 console.log(response);
@@ -52,7 +57,7 @@ $(document).ready(function(){
                     icon: "success",
                     title: response?.message,
                 });
-                button_el.html("Add To Cart <i class='rt-basket-shopping ms-2'><>");
+                button_el.html("Add To Cart <i class='rt-basket-shopping ms-2'></i>");
                 $(".total_cart_items").text(response?.total_cart_items);
 
             },
@@ -67,5 +72,6 @@ $(document).ready(function(){
                 });
             }
         });
-    })
-})
+    });
+});
+
