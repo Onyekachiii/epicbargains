@@ -7,7 +7,10 @@ from django.conf import settings
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives, send_mail
-from django.db.models import Q, Avg, Sum
+from django.db.models import Q, Avg, Sum, Count
+from django.core import serializers
+
+from django.contrib.auth.decorators import login_required
 
 
 from decimal import Decimal
@@ -18,8 +21,8 @@ import razorpay
 
 # from plugin.paginate_queryset import paginate_queryset
 from store import models as store_models
+from store.models import Category
 from customer import models as customer_models
-from vendor import models as vendor_models
 from userauths import models as userauths_models
 # from plugin.tax_calculation import tax_calculation
 # from plugin.exchange_rate import convert_usd_to_inr, convert_usd_to_kobo, convert_usd_to_ngn, get_usd_to_ngn_rate
@@ -90,30 +93,25 @@ def index(request):
 #     }
 #     return render(request, "store/shop.html", context)
 
-# def category(request, id):
-#     category = store_models.Category.objects.get(id=id)
-#     products_list = store_models.Product.objects.filter(status="Published", category=category)
+def category(request, id):
+    category = store_models.Category.objects.get(id=id)
+    products_list = store_models.Product.objects.filter(status="Published", category=category)
 
-#     query = request.GET.get("q")
-#     if query:
-#         products_list = products_list.filter(name__icontains=query)
+    query = request.GET.get("q")
+    if query:
+        products_list = products_list.filter(name__icontains=query)
 
-#     products = (request, products_list, 10)
+    # Annotate each category with the number of published products
+    categories = store_models.Category.objects.annotate(
+        count=Count('product', filter=Q(product__status='Published'))
+    )
 
-#     context = {
-#         "products": products,
-#         "products_list": products_list,
-#         "category": category,
-#     }
-#     return render(request, "store/category.html", context)
-
-# def vendors(request):
-#     vendors = userauths_models.Profile.objects.filter(user_type="Vendor")
-    
-#     context = {
-#         "vendors": vendors
-#     }
-#     return render(request, "store/vendors.html", context)
+    context = {
+        "products_list": products_list,
+        "category": category,
+        "categories": categories,  # ← Pass this to your template
+    }
+    return render(request, "store/category.html", context)
 
 def product_detail(request, slug):
     product = store_models.Product.objects.get(status="Published", slug=slug)
@@ -208,9 +206,8 @@ def add_to_cart(request):
 def cart(request):
     cart_id = request.session.get('cart_id')
 
-    query = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
-    items = query
-    cart_sub_total = query.aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
+    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
 
     try:
         addresses = customer_models.Address.objects.filter(user=request.user)
@@ -256,7 +253,6 @@ def delete_cart_item(request):
         "total_cart_items": total_cart_items.count(),
         "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
     })
-
 # def create_order(request):
 #     if request.method == "POST":
 #         address_id = request.POST.get("address")

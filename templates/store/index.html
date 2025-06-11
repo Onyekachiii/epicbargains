@@ -9,7 +9,7 @@
 
 <header id="rtsHeader"> 
     
-    <!-- slide-bar start -->
+    {% comment %} <!-- slide-bar start -->
     <aside class="slide-bar">
         <div class="offset-sidebar">
             <a class="hamburger-1 mobile-hamburger-1 ml--30" href="#"><span><i class="rt-xmark"></i></span></a>
@@ -26,10 +26,10 @@
                 <div class="info-widget info-widget2">
                     <h4 class="offset-title mb-20">Get In Touch </h4>
                     <ul>
-                        <li class="info phone"><a href="tel:78090790890208806803">780 907 908 90, 208 806 803</a></li>
-                        <li class="info email"><a href="email:info@webmail.com">info@webmail.com</a></li>
-                        <li class="info web"><a href="www.webexample.com">www.webexample.com</a></li>
-                        <li class="info location">13/A, New Pro State, NYC</li>
+                        <li class="info phone"><a href="tel:78090790890208806803">+234 81888 44722, +234 81888 44711</a></li>
+                        <li class="info email"><a href="email:info@webmail.com">info@epicbargains.com</a></li>
+                
+                        <li class="info location">121 Ikorodu Road, Onipanu, Lagos</li>
                     </ul>
                     <div class="offset-social-link">
                         <h4 class="offset-title mb-20">Follow Us </h4>
@@ -49,83 +49,24 @@
         <nav class="side-mobile-menu side-mobile-menu1">
             <ul id="mobile-menu-active">
                 <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="#">Home <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu">
-                        <li><a href="/">Main Home</a></li>
-                        <li><a href="/">Fashion Home</a></li>
-                        <li><a href="/">Fashion Home Two</a></li>
-                        <li><a href="/">Furniture Home</a></li>
-                        <li><a href="/">Decor Home</a></li>
-                        <li><a href="/">Electronics Home</a></li>
-                        <li><a href="/">Grocery Home</a></li>
-                        <li><a href="/">Footwear Home</a></li>
-                        <li><a href="/">Gaming Home</a></li>
-                        <li><a href="/">Sunglass Home</a></li>
-                    </ul>
+                    <a class="mm-link" href="#">Home </a>
                 </li>
                 <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="/">Shop <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu mega-dropdown-mobile">
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Left Sidebar
-                                        Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Right Sidebar
-                                        Shop</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Full
-                                        Width Shop</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Single Product
-                                        Layout
-                                        One</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Single Product Layout
-                                        Two</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Variable Product</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Grouped Product</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="mega-dropdown-li">
-                            <ul class="mega-dropdown-ul mm-show">
-                                <li class="dropdown-li"><a class="dropdown-link" href="{% url 'store:cart' %}">Cart
-                                    </a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">Checkout</a>
-                                </li>
-                                <li class="dropdown-li"><a class="dropdown-link" href="/">My
-                                        Account</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <a class="mm-link" href="/">Shop </a>
+                    
                 </li>
+                <li><a class="mm-link" href="/">About</a></li>
                 <li class="has-dropdown firstlvl">
                     <a class="mm-link" href="/">Pages <i class="rt-angle-down"></i></a>
                     <ul class="sub-menu">
-                        <li><a href="/">About</a></li>
+                        <li><a href="">Cart</a></li>
+                        <li><a href="/">Wishlist</a></li>
+    
                         <li><a href="/">FAQ's</a></li>
-                        <li><a href="/">Error 404</a></li>
+                        <li><a href="/">Sign In/Register</a></li>
                     </ul>
                 </li>
-                <li class="has-dropdown firstlvl">
-                    <a class="mm-link" href="/">Blog <i class="rt-angle-down"></i></a>
-                    <ul class="sub-menu">
-                        <li><a href="/">Blog</a></li>
-                        <li><a href="/">Blog Grid</a></li>
-                        <li><a href="/">Blog Details</a></li>
-                    </ul>
-                </li>
+                
                 <li><a class="mm-link" href="/">Contact</a></li>
             </ul>
         </nav>
@@ -167,7 +108,7 @@
             <a href="#" class="account"><i class="rt-user-2"></i></a>
         </div>
         <!-- side-mobile-menu end -->
-    </aside>
+    </aside> {% endcomment %}
     <!--================= Banner Section Start Here =================-->
     
     <div class="banner banner-1 bg-image">
@@ -187,13 +128,34 @@
                                         <li><a href="/">Window Blinds & Accessories<i class="rt rt-arrow-right-long"></i></a></li>
                                         <li><a href="/">Wall Coverings <i class="rt rt-arrow-right-long"></i></a></li>
                                         <li><a href="/">Floor Panels <i class="rt rt-arrow-right-long"></i></a></li>
-                                        <li><a href="/"><i class="rt rt-arrow-right-long"></i></a></li>
+                                        <li><a href="/">Other Gadgets <i class="rt rt-arrow-right-long"></i></a></li>
+                                        
                                         <li><a href="/">...  <i class="rt rt-arrow-right-long"></i></a></li>
                                     </ul>
                                 </nav>
                             </div>
                         </div>
                     </div>
+                    <!-- Mobile All Categories Bar -->
+                    <div class="mobile-category-toggle d-block d-md-none">
+                        <button class="category-toggle-btn">
+                            <strong>All Categories</strong>
+                            <i class="rt-angle-down"></i>
+                        </button>
+                        <div class="category-dropdown">
+                            <ul>
+                                <li><a href="/">Footwears (Wingsteps)</a></li>
+                                <li><a href="/">Laundry Essentials</a></li>
+                                <li><a href="/">Skin/Bodycare</a></li>
+                                <li><a href="/">Smart Home Solutions</a></li>
+                                <li><a href="/">Window Blinds & Accessories</a></li>
+                                <li><a href="/">Wall Coverings</a></li>
+                                <li><a href="/">Floor Panels</a></li>
+                                <li><a href="/">Other Gadgets</a></li>
+                            </ul>
+                        </div>
+                    </div>
+  
                     <div class="col-xl-10 col-md-8 col-sm-12 gutter-2">
                         <div class="swiper bannerSlide2">
                             <div class="swiper-wrapper">
@@ -202,8 +164,7 @@
                                         <div class="container">
                                             <div class="single-inner">
                                                 <div class="content-box">
-                                                    {% comment %} <h2 class="slider-title"> CALL OF <br> DUTY GAMES</h2>
-                                                    <a href="#" class="slider-btn2">View Collections</a> {% endcomment %}
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -214,9 +175,7 @@
                                         <div class="container">
                                             <div class="single-inner">
                                                 <div class="content-box">
-                                                    {% comment %} <img src="/static/images/banner/01.png" alt=""> {% endcomment %}
-                                                    {% comment %} <h2 class="slider-title"> BLADEPOINT MORUS <br> CUP SEASON 2</h2>
-                                                    <a href="#" class="slider-btn2">View Collections</a> {% endcomment %}
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +224,6 @@
     </div>
     <!--================= Banner Section End Here =================-->
 </header>
-
 <!-- ..::Offer Section Start Here::.. -->
 <div class="rts-offer-section">
     <div class="container">
@@ -284,76 +242,19 @@
         </div>
         <div class="swiper rts-cmmnSlider-over" data-swiper="pagination">
             <div class="swiper-wrapper">
+                {% for c in categories %}
                 <div class="swiper-slide">
                     <div class="collection-item">
                         <a href="/"><img src="/static/images/catagory/item-1.png" alt="collection-image">
                         </a>
-                        <p class="item-quantity">20 <span>items</span></p>
+                        <p class="item-quantity">{{c.count}} <span>items</span></p>
                         <a href="/" class="item-catagory-box">
-                            <h3 class="title">FOOTWEARS</h3>
+                            <h3 class="title">{{c.name}}</h3>
                         </a>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-2.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">33 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">LAUNDRY ESSENTIALS</h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-3.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">25 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">SKIN/BODYCARE</h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-4.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">33 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">SMART HOME SOLUTIONS</h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-4.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">33 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">WINDOW BLINDS/ACCESORIES</h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-4.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">33 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">WALL COVERINGS</h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="collection-item">
-                        <a href="/"><img src="/static/images/catagory/item-4.png" alt="collection-image">
-                        </a>
-                        <p class="item-quantity">33 <span>items</span></p>
-                        <a href="/" class="item-catagory-box">
-                            <h3 class="title">FLOOR PANELS</h3>
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
+                                
             </div>
         </div>
     </div>
@@ -716,6 +617,19 @@
 </div>
 <!-- ..::Featured Product Section End Here::.. -->
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleBtn = document.querySelector(".category-toggle-btn");
+      const dropdown = document.querySelector(".category-dropdown");
+  
+      if (toggleBtn && dropdown) {
+        toggleBtn.addEventListener("click", () => {
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        });
+      }
+    });
+  </script>
+  
 
 
 {% endblock content %}

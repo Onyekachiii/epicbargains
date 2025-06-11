@@ -1,5 +1,7 @@
 {% extends '../layout/layout.html' %}
 
+{% load humanize %}
+
 {% block script %}
         <script src="/static/js/vendors/zoom.js"></script> 
 {% endblock %} 
@@ -29,16 +31,16 @@
                         <thead class="thead-dark">
                         </thead>
                         <tbody>
-                        {% for i in items %}
+                        {% for item in items %}
                             <tr>
-                                <td><div class="product-thumb"><img src="{{item.image.url}}" alt="product-thumb"></div></td>
+                                <td><div class="product-thumb"><img src="{{item.product.image.url}}" style="width: 100px; height:100px; object-fit: cover;" alt="product-thumb"></div></td>
                                 <td>
                                     <div class="product-title-area">
-                                        <span class="pretitle">{{item.category}}</span>
-                                        <h4 class="product-title">{{item.title}}</h4>
+                                        <span class="pretitle">{{item.product.category}}</span>
+                                        <h4 class="product-title">{{item.product.name}}</h4>
                                     </div>
                                 </td>
-                                <td><span class="product-price">$69.00</span></td>
+                                <td><span class="product-price">₦ {{item.price|intcomma}}</span></td>
                                 <td>
                                     <div class="cart-edit">
                                         <div class="quantity-edit">
@@ -48,7 +50,9 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="last-td"><button class="remove-btn">Remove</button></td>
+                                <td><span class="product-price">₦ {{item.price|intcomma}}</span></td>
+                                <td>
+                                <td class="last-td"><button class="remove-btn delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}">Delete</button></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -60,7 +64,7 @@
                     <div class="checkout-box-inner">
                         <div class="subtotal-area">
                             <span class="title">Subtotal</span>
-                            <span class="subtotal-price">$364.00</span>
+                            <span class="subtotal-price">₦ {{ cart_sub_total|floatformat:2|intcomma }}</span>
                         </div>
                         <div class="shipping-check">
                             <span class="title">Shipping</span>
@@ -83,7 +87,7 @@
                         </div>
                         <div class="total-area">
                             <span class="title">Total</span>
-                            <span class="total-price">$364.00</span>
+                            <span class="total-price">₦ <span class="cart_sub_total">{{ cart_sub_total|floatformat:2|intcomma }}</span></span>
                         </div>
                     </div>
                     <a href="#" class="procced-btn">Procced To Checkout</a>
