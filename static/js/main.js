@@ -1194,18 +1194,7 @@
     });
   });
 
-  $(function () {
-    $('.quantity-edit .button').on('click', function () {
-      const $input = $(this).siblings('.input');
-      let val = parseInt($input.val()) || 1;
-      if ($(this).hasClass('plus')) {
-        val += 1;
-      } else {
-        val = Math.max(1, val - 1);
-      }
-      $input.val(val);
-    });
-  });
+  // 
   
   var countdown = $('.countdown');
 

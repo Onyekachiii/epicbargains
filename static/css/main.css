@@ -4605,6 +4605,7 @@ tr:first-child {
  */
 #rtsHeader {
   position: relative;
+  margin-bottom: 0;
 }
 
 .header-topbar {
@@ -9435,6 +9436,21 @@ tr:first-child {
   background-size: cover;
   background-position: center;
 }
+
+@media (max-width: 768px) {
+  .banner .banner-single {
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    height: auto !important;
+    min-height: 400px;
+    border-radius: 10px;
+    opacity: 100%;
+    margin-top: 0;
+    
+  }
+}
+
 .banner .banner-single .single-inner {
   display: flex;
   justify-content: space-between;
@@ -9611,6 +9627,7 @@ tr:first-child {
   background-size: cover;
   padding: 35px 0 10px 0;
   border-radius: 10px;
+  margin-top: 0;
 }
 .rts-offer-section .container .rts-offer-inner .description {
   color: #000000;
@@ -9626,6 +9643,17 @@ tr:first-child {
 .rts-offer-section .container .rts-offer-inner .description a:hover {
   color: #EE403D;
 }
+
+.banner {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.offer-section { /* change this to your actual class */
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 
 .rts-new-collection-section {
   overflow: hidden;
@@ -14732,6 +14760,7 @@ tr:first-child {
 @media (max-width: 991px) {
   .rts-offer-section .container .section-inner .product-item7 {
     margin-bottom: 30px;
+    margin-top: -20px;
   }
 }
 .rts-offer-section .container .section-inner .product-item7 .product-image {
@@ -14747,6 +14776,7 @@ tr:first-child {
 @media (max-width: 768px) {
   .rts-offer-section .container .section-inner .product-item7 .product-image img {
     width: 100%;
+    margin-top: -20px;
   }
 }
 .rts-offer-section .container .section-inner .product-item7 .bottom-text {
@@ -20468,6 +20498,9 @@ tr:first-child {
   top: -1px;
   border-radius: 50%;
   margin-right: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .rts-checkout-section .check-options .form-group label::after {
   top: 7px;

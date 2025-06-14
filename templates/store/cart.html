@@ -32,7 +32,8 @@
                         </thead>
                         <tbody>
                         {% for item in items %}
-                            <tr>
+                            
+                            <tr class="item_div_{{item.id}}">
                                 <td><div class="product-thumb"><img src="{{item.product.image.url}}" style="width: 100px; height:100px; object-fit: cover;" alt="product-thumb"></div></td>
                                 <td>
                                     <div class="product-title-area">
@@ -44,16 +45,20 @@
                                 <td>
                                     <div class="cart-edit">
                                         <div class="quantity-edit">
-                                            <button class="button"><i class="fal fa-minus minus"></i></button>
-                                            <input type="text" class="input" value="3" />
-                                            <button class="button plus">+<i class="fal fa-plus plus"></i></button>
+                                            <button class="button update_cart_qty" data-update_type="decrease" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}"><i class="fal fa-minus minus"></i></button>
+                                            <input type="text" class="input item-qty-{{item.id}}" value="{{item.qty}}" />
+                                            <button class="button plus update_cart_qty" data-update_type="increase" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}">+<i class="fal fa-plus plus"></i></button>
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="product-price">₦ {{item.price|intcomma}}</span></td>
+                                <td><span class="product-price ">₦ <span class="item_sub_total_{{item.id}}">{{item.sub_total|intcomma}}</span></span></td>
                                 <td>
-                                <td class="last-td"><button class="remove-btn delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}">Delete</button></td>
+                                <td class="last-td"><button class="remove-btn delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}" title="Remove item">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                </td>
                             </tr>
+                            
                         {% endfor %}
                         </tbody>
                     </table>
@@ -64,27 +69,28 @@
                     <div class="checkout-box-inner">
                         <div class="subtotal-area">
                             <span class="title">Subtotal</span>
-                            <span class="subtotal-price">₦ {{ cart_sub_total|floatformat:2|intcomma }}</span>
+                            <span class="subtotal-price"> ₦ <span class="cart_sub_total">{{ cart_sub_total|floatformat:2|intcomma }}</span></span>
                         </div>
                         <div class="shipping-check">
                             <span class="title">Shipping</span>
                             <div class="check-options">
                                 <form>
-                                        <div class="form-group">
-                                        <input type="checkbox" id="fltrt">
-                                        <label class="check-title" for="fltrt">Flat rate</label>
-                                        </div>
-                                        <div class="form-group">
-                                        <input type="checkbox" id="frsh">
-                                        <label class="check-title" for="frsh">Free shipping</label>
-                                        </div>
+                                    <div class="form-group d-flex justify-content-between align-items-center">
+                                        <label class="check-title" for="fltrt">Tax</label>
+                                        <span class="price">₦ 0.00</span>
+                                    </div>
+                                    <div class="form-group d-flex justify-content-between align-items-center">
+                                        <label class="check-title" for="frsh">Shipping</label>
+                                        <span class="price">₦ 0.00</span>
+                                    </div>
+                                    
                                 </form>
                             </div>
                         </div>
-                        <div class="shipping-location">
+                        {% comment %} <div class="shipping-location">
                             <span class="shipping-to">Shipping to <span>NY.</span></span>
                             <span class="change-address"><i class="fal fa-map-marker-alt mr--5"></i>Change address</span>
-                        </div>
+                        </div> {% endcomment %}
                         <div class="total-area">
                             <span class="title">Total</span>
                             <span class="total-price">₦ <span class="cart_sub_total">{{ cart_sub_total|floatformat:2|intcomma }}</span></span>

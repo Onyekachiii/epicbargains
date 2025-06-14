@@ -20,6 +20,7 @@ import stripe
 import razorpay
 
 # from plugin.paginate_queryset import paginate_queryset
+from store import context
 from store import models as store_models
 from store.models import Category
 from customer import models as customer_models
@@ -246,13 +247,15 @@ def delete_cart_item(request):
 
     # Count the total number of items in the cart
     total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
-    cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
 
     return JsonResponse({
         "message": "Item deleted",
         "total_cart_items": total_cart_items.count(),
         "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
     })
+    
+    
 # def create_order(request):
 #     if request.method == "POST":
 #         address_id = request.POST.get("address")

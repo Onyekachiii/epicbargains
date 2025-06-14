@@ -247,9 +247,9 @@
                     <div class="collection-item">
                         <a href="/"><img src="/static/images/catagory/item-1.png" alt="collection-image">
                         </a>
-                        <p class="item-quantity">{{c.count}} <span>items</span></p>
+                        <p class="item-quantity">{{c.category.count}} <span>items</span></p>
                         <a href="/" class="item-catagory-box">
-                            <h3 class="title">{{c.name}}</h3>
+                            <h3 class="title">{{c.title}}</h3>
                         </a>
                     </div>
                 </div>
@@ -281,9 +281,9 @@
                     <div class="swiper-slide">
                         <div class="product-item element-item1">
                             <a href="{% url 'store:product_detail' p.slug %}" class="product-image image-hover-variations">
-                                <div class="image-vari1 image-vari"><img src="{{p.image.url}}" alt="product-image">
+                                <div class="image-vari1 image-vari"><img src="{{p.image.url}}"  style="width: 338px; height:450px;" alt="product-image">
                                 </div>
-                                <div class="image-vari2 image-vari"><img src="{{p.image.url}}" alt="product-image">
+                                <div class="image-vari2 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
                                 </div>
                             </a>
                             <div class="bottom-content">
@@ -378,9 +378,9 @@
                 <div class="col-xl-3 col-md-4 col-sm-6 col-12">
                     <div class="product-item element-item1">
                         <a href="{% url 'store:product_detail' p.slug %}" class="product-image image-hover-variations">
-                            <div class="image-vari1 image-vari"><img src="{{p.image.url}}" alt="product-image">
+                            <div class="image-vari1 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
                             </div>
-                            <div class="image-vari2 image-vari"><img src="{{p.image.url}}" alt="product-image">
+                            <div class="image-vari2 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
                             </div>
                         </a>
                         <div class="bottom-content">
