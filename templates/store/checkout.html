@@ -1,0 +1,208 @@
+{% extends '../layout/layout.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+<div class="page-path">
+    <div class="container">
+        <div class="breadcrumbs-inner">
+            <h1 class="path-title">Checkout</h1>
+            <ul>
+                <li><a class="home-page-link" href="{% url 'store:index' %}">Home<i class="fal fa-angle-right"></i></a></li>
+                <li><a class="current-page" href="#">Checkout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="checkoutForm"novalidate>
+    {% csrf_token %}
+    <div class="rts-checkout-section">
+        <div class="container">
+            <div class="row justify-content-between">
+                <!-- Left side: Form -->
+                <div class="col-xl-8">
+                    <div class="checkout-form">
+                        <div class="row">
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="first_name" placeholder="First name**" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="last_name" placeholder="Last name**" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="city" placeholder="Town/City**" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="zip_code" placeholder="Zip Code (Optional)">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="street_address" placeholder="Street Address**" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="apartment" placeholder="Apartment, suite, unit, etc (Optional)">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="text" name="phone_number" placeholder="Phone Number**" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-6">
+                                <div class="input-div">
+                                    <input type="email" name="email" placeholder="Email Address**" required>
+                                </div>
+                            </div>
+                        </div>
+                        <textarea name="notes" cols="80" rows="4" placeholder="Order notes (optional)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Right side: Cart and Payment -->
+                <div class="col-xl-4">
+                    <div class="action-item">
+                        <div class="action-top">
+                            <span class="action-title">Product</span>
+                            <span class="subtotal">Subtotal</span>
+                        </div>
+                        {% for item in cart_data %}
+                        <div class="category-item">
+                            <div class="category-item-inner">
+                                <div class="category-title-area">
+                                    <span class="category-title">{{ item.product.name }} × {{ item.qty }}</span>
+                                </div>
+                                <div class="price">₦ {{ item.sub_total|floatformat:2|intcomma }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="action-middle">
+                            <span class="subtotal">Subtotal</span>
+                            <span class="total-price">₦ {{ cart_total_amount|floatformat:2|intcomma }}</span>
+                        </div>
+                        <div class="shipping-options checkout-options">
+                            <span class="shipping">Shipping</span>
+                            <div class="form-group d-flex justify-content-between align-items-center">
+                                <label class="check-title">Tax</label>
+                                <span class="price">₦ 0.00</span>
+                            </div>
+                            <div class="form-group d-flex justify-content-between align-items-center">
+                                <label class="check-title">Shipping</label>
+                                <span class="price">₦ 0.00</span>
+                            </div>
+                        </div>
+                        <div class="action-bottom">
+                            <span class="total">Total</span>
+                            <span class="total-price">₦ {{ cart_total_amount|floatformat:2|intcomma }}</span>
+                        </div>
+                    </div>
+
+                    <div class="action-item m-0">
+                        <div class="payment-options checkout-options">
+                            <div class="form-group">
+                                <input type="checkbox" id="drbank" name="payment_method" value="bank">
+                                <label class="check-title" for="drbank">Direct bank transfer</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="freetrans" name="payment_method" value="cod">
+                                <label class="check-title" for="freetrans">Cash on delivery</label>
+                            </div>
+                            <div class="form-group last-child">
+                                <input type="checkbox" id="paypl" name="payment_method" value="paypal">
+                                <label class="check-title" for="paypl">PayPal <a href="/">What is PayPal?</a></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="place-order-btn" id="placeOrderBtn">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BANK MODAL -->
+    <div id="bankModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:white; padding:20px; z-index:1000; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); max-width:400px;">
+        <button type="button" id="closeBankModal" style="float:right; font-size:18px; border:none; background:none;">×</button>
+        <h4>Bank Transfer Details</h4>
+        <p><strong>Bank:</strong> XYZ Bank</p>
+        <p><strong>Account Name:</strong> Sains Products Ltd</p>
+        <p><strong>Account Number:</strong> 1234567890</p>
+        <label for="receipt">Upload Transfer Receipt (PDF):</label>
+        <input type="file" name="bank_receipt" id="bankReceiptInput" accept=".pdf">
+        <br><br>
+        <!-- Inside bankModal -->
+        <button type="button" id="finalSubmit" class="place-order-btn">Submit & Place Order</button>
+
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById("checkoutForm");
+        const bankInput = document.getElementById("drbank");
+        const receiptInput = document.getElementById("bankReceiptInput");
+        const modal = document.getElementById("bankModal");
+    
+        form.addEventListener("submit", function (e) {
+            // Intercept form submit if bank transfer is selected
+            if (bankInput.checked) {
+                e.preventDefault();
+    
+                // 1. Validate only visible required fields (ignore hidden receiptInput)
+                const requiredFields = form.querySelectorAll("input[required]:not([type='file']), textarea[required]");
+                let valid = true;
+    
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        valid = false;
+                        field.style.borderColor = "red";
+                    } else {
+                        field.style.borderColor = "";
+                    }
+                });
+    
+                if (!valid) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+    
+                // 2. Show modal (and defer form submission to the modal button)
+                modal.style.display = "block";
+            }
+        });
+    
+        // Final submit button inside modal
+        document.getElementById("finalSubmit").addEventListener("click", function () {
+            if (!receiptInput.value.trim()) {
+                alert("Please upload your bank transfer receipt.");
+                return;
+            }
+    
+            // Submit the form after receipt is confirmed
+            modal.style.display = "none";
+            form.submit();
+        });
+    
+        // Close modal
+        document.getElementById("closeBankModal").addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+    });
+    </script>
+    
+    
+
+
+
+{% endblock content %}

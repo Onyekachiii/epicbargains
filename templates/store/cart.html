@@ -87,16 +87,13 @@
                                 </form>
                             </div>
                         </div>
-                        {% comment %} <div class="shipping-location">
-                            <span class="shipping-to">Shipping to <span>NY.</span></span>
-                            <span class="change-address"><i class="fal fa-map-marker-alt mr--5"></i>Change address</span>
-                        </div> {% endcomment %}
+                        
                         <div class="total-area">
                             <span class="title">Total</span>
                             <span class="total-price">₦ <span class="cart_sub_total">{{ cart_sub_total|floatformat:2|intcomma }}</span></span>
                         </div>
                     </div>
-                    <a href="#" class="procced-btn">Procced To Checkout</a>
+                    <a href="{% url 'store:checkout' %}" class="procced-btn">Procced To Checkout</a>
                     <a href="#" class="continue-shopping"><i class="fal fa-long-arrow-left"></i> Continue Shopping</a>
                 </div>
             </div>

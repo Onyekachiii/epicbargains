@@ -1,5 +1,6 @@
 from django.contrib import admin
 from store import models as store_models
+from .models import Order, OrderItem
 
 class GalleryInline(admin.TabularInline):
     model = store_models.Gallery
@@ -40,20 +41,33 @@ class CartAdmin(admin.ModelAdmin):
     search_fields = ['cart_id', 'product__name', 'user__username']
     list_filter = ['date', 'product']
 
-class CouponAdmin(admin.ModelAdmin):
-    list_display = ['code', 'vendor', 'discount']
-    search_fields = ['code', 'vendor__username']
+    
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_id', 'customer', 'total', 'payment_status', 'order_status', 'payment_method', 'date']
+    list_display = ['order_id', 'get_customer_name', 'get_customer_phone', 'total', 'payment_status', 'order_status', 'payment_method', 'date']
     list_editable = ['payment_status', 'order_status', 'payment_method']
-    search_fields = ['order_id', 'customer__username']
-    list_filter = ['payment_status', 'order_status']
+    search_fields = ['order_id', 'customer__username', 'customer__first_name', 'customer__last_name']
+    list_filter = ['payment_status', 'order_status', 'date']
+    inlines = [OrderItemInline]
+
+    def get_customer_name(self, obj):
+        if obj.customer:
+            return f"{obj.customer.first_name} {obj.customer.last_name}"
+        return "-"
+    get_customer_name.short_description = 'Customer Name'
+
+    def get_customer_phone(self, obj):
+        return obj.customer.phone_number if obj.customer and hasattr(obj.customer, 'phone_number') else "-"
+    get_customer_phone.short_description = 'Phone Number'
 
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['item_id', 'order', 'product', 'qty', 'price', 'total']
     search_fields = ['item_id', 'order__order_id', 'product__name']
     list_filter = ['order__date']
+    
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['user', 'product', 'rating', 'active', 'date']

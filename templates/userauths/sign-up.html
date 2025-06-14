@@ -1,0 +1,78 @@
+{% extends '../layout/layout.html' %}
+
+{% block script %}
+        <script src="/static/js/vendors/zoom.js"></script> 
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% endblock %} 
+
+{% block content %}
+
+<div class="page-path">
+    <div class="container">
+        <div class="breadcrumbs-inner">
+            <h1 class="path-title">Sign Up</h1>
+            <ul>
+                <li><a class="home-page-link" href="{% url 'store:index' %}">Home<i class="fal fa-angle-right"></i></a></li>
+                <li><a class="current-page" href="#">Register</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--login-area start-->
+<div class="login-area">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-lg-6 col-md-12 ml-10">
+                <div class="register-form">
+                    <div class="section-title">
+                        <h2>Registration</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <form method = "post">
+                                {% csrf_token %}
+                                <div class="form">
+                                    {{form.full_name}}
+                                </div>
+                                <div class="form">
+
+                                    {{form.email}}
+                                </div>
+                                <div class="form">
+
+                                    {{form.mobile}}
+                                </div>
+                                
+                                <div class="form">
+                                    <div class="password-input">
+                                        {{form.password1}}
+                                        <span class="show-password-input"></span>
+                                    </div>
+                                </div>
+                                <div class="form">
+                                    <div class="password-input">
+                                        {{form.password2}}
+                                        <span class="show-password-input"></span>
+                                    </div>
+                                </div>
+                                <div class="form">
+
+                                    {{form.captcha}}
+                                </div>
+                                <div class="form">
+                                    <button type="submit" class="btn">Register</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--login-area end-->
+
+{% endblock content %}

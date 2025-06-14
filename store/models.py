@@ -24,11 +24,10 @@ PAYMENT_STATUS = (
 )
 
 PAYMENT_METHOD = (
-    ("PayPal", "PayPal"),
-    ("Stripe", "Stripe"),
+    ("Bank Transfer", "Bank Transfer"),
     ("Flutterwave", "Flutterwave"),
     ("Paystack", "Paystack"),
-    ("RazorPay", "RazorPay"),
+    
 )
 
 ORDER_STATUS = (
@@ -85,7 +84,7 @@ class Product(models.Model):
     status = models.CharField(choices=STATUS, max_length=50, default="Published")
     featured = models.BooleanField(default=False, verbose_name="Marketplace Featured")
     
-    # vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True)
+    
     
     sku = ShortUUIDField(unique=True, length=5, max_length=50, prefix="SKU", alphabet="1234567890")
     slug = models.SlugField(null=True, blank=True)
@@ -166,7 +165,6 @@ class Cart(models.Model):
 
 
 class Order(models.Model):
-    vendors = models.ManyToManyField(user_models.User, blank=True)
     customer = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, related_name="customer", blank=True)
     sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     shipping = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
@@ -206,6 +204,7 @@ class OrderItem(models.Model):
     color = models.CharField(max_length=100, null=True, blank=True)
     size = models.CharField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    
     sub_total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     shipping = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     tax = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
@@ -214,7 +213,7 @@ class OrderItem(models.Model):
     saved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, null=True, blank=True, help_text="Amount saved by customer")
     applied_coupon = models.BooleanField(default=False)
     item_id = ShortUUIDField(length=6, max_length=25, alphabet="1234567890")
-    vendor = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, related_name="vendor_order_items")
+    bank_receipt = models.FileField(upload_to="bank_receipts/", null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
 
     def order_id(self):

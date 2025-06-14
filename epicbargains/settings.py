@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     
     'anymail',
     'django_ckeditor_5',
-    # 'captcha',
+    'captcha',
     
 ]
 
@@ -155,6 +155,12 @@ JAZZMIN_SETTINGS = {
     "site_icon": "/images/fav.png",
     "site_logo": "/images/fav.png",
 }
+
+RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_USE_SSL = True
+
+
 
 customColorPalette = [
     {"color": "hsl(4, 90%, 58%)", "label": "Red"},

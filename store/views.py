@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.db.models import Q, Avg, Sum, Count
 from django.core import serializers
+from .forms import CartOrderRequestForm
+
 
 from django.contrib.auth.decorators import login_required
 
@@ -254,8 +256,77 @@ def delete_cart_item(request):
         "total_cart_items": total_cart_items.count(),
         "cart_sub_total": "{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
     })
-    
-    
+
+
+
+def create_order(request):
+    customer=request.user,
+    cart_id = request.session.get('cart_id')
+    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+
+    if not items.exists():
+        messages.warning(request, "Your cart is empty.")
+        return redirect("store:cart")
+
+    cart_sub_total = items.aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
+    cart_shipping_total = items.aggregate(shipping=Sum("shipping"))['shipping'] or 0
+
+    if request.method == "POST":
+        form = CartOrderRequestForm(request.POST)
+
+        if form.is_valid():
+            # Create order with form and cart data
+            order = store_models.Order()
+            order.customer = request.user
+            order.sub_total = cart_sub_total
+            order.shipping = cart_shipping_total
+            order.tax = Decimal(0)
+            order.service_fee = Decimal(0)
+            order.total = order.sub_total + order.shipping + order.tax + order.service_fee
+
+            # Fill order with form data
+            order.first_name = form.cleaned_data['first_name']
+            order.last_name = form.cleaned_data['last_name']
+            order.email = form.cleaned_data['email']
+            order.phone = form.cleaned_data['phone_number']
+            order.address = form.cleaned_data['street_address']
+            order.city = form.cleaned_data['city']
+            order.zip_code = form.cleaned_data['zip_code']
+            order.note = form.cleaned_data.get('note', '')
+            order.save()
+
+            # Create order items
+            for item in items:
+                store_models.OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    qty=item.qty,
+                    color=item.color,
+                    size=item.size,
+                    price=item.price,
+                    sub_total=item.sub_total,
+                    shipping=item.shipping,
+                    total=item.total,
+                    initial_total=item.total,
+                )
+
+            # Optional: Clear the cart after order
+            items.delete()
+            messages.success(request, "Your order has been placed successfully.")
+            return redirect("store:checkout")
+        else:
+            messages.warning(request, "Please correct the errors in the form.")
+    else:
+        form = CartOrderRequestForm()
+
+    return render(request, "store/checkout.html", {
+        'form': form,
+        'cart_data': items,
+        'cart_total_amount': cart_sub_total,
+        'totalcartitems': items.count()
+    })
+
+
 # def create_order(request):
 #     if request.method == "POST":
 #         address_id = request.POST.get("address")
@@ -270,8 +341,8 @@ def delete_cart_item(request):
 #         else:
 #             cart_id = None
 
-#         items = store_models.Cart.objects.filter(cart_id=cart_id)
-#         cart_sub_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
+#         items = store_models.Cart.objects.filter(Q(cart_id=cart_id)|Q(user=request.user) if request.user.is_authenticated else Q(cart_id=cart_id))
+#         cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id)|Q(user=request.user) if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
 #         cart_shipping_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(shipping = models.Sum("shipping"))['shipping']
         
 #         order = store_models.Order()
@@ -279,9 +350,7 @@ def delete_cart_item(request):
 #         order.customer = request.user
 #         order.address = address
 #         order.shipping = cart_shipping_total
-#         # order.tax = tax_calculation(address.country, cart_sub_total)
 #         order.total = order.sub_total + order.shipping + Decimal(order.tax)
-#         # order.service_fee = calculate_service_fee(order.total)
 #         order.total += order.service_fee
 #         order.save()
 
@@ -298,11 +367,8 @@ def delete_cart_item(request):
 #                 # tax=tax_calculation(address.country, i.sub_total),
 #                 total=i.total,
 #                 initial_total=i.total,
-#                 vendor=i.product.vendor
+                
 #             )
-
-#             order.vendors.add(i.product.vendor)
-        
     
 #     return redirect("store:checkout", order.order_id)
 
