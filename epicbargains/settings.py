@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from pyexpat.errors import messages
+from django.contrib.messages import constants as messages
+
 
 from environs import Env
 
@@ -156,10 +159,20 @@ JAZZMIN_SETTINGS = {
     "site_logo": "/images/fav.png",
 }
 
+
+
 RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
 RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
 RECAPTCHA_USE_SSL = True
 
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',  # This is the correct way to map ERROR to 'danger'
+}
 
 
 customColorPalette = [

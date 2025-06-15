@@ -2,65 +2,57 @@
 
 {% block script %}
         <script src="/static/js/vendors/zoom.js"></script> 
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
 {% endblock %} 
 
 {% block content %}
 
+
 <div class="page-path">
     <div class="container">
         <div class="breadcrumbs-inner">
-            <h1 class="path-title">Sign Up</h1>
+            <h1 class="path-title">Sign In</h1>
             <ul>
                 <li><a class="home-page-link" href="{% url 'store:index' %}">Home<i class="fal fa-angle-right"></i></a></li>
-                <li><a class="current-page" href="#">Register</a></li>
+                <li><a class="current-page" href="#">Sign In</a></li>
             </ul>
         </div>
     </div>
 </div>
-
 <!--login-area start-->
 <div class="login-area" style="min-height: 100vh; display: flex; align-items: center;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8">
-                <div class="register-form text-center">
+                <div class="login-form text-center">
                     <div class="section-title">
-                        <h2>Registration <i class="fas fa-user-plus ms-2"></i></h2>
+                        <h2>Login <i class="fas fa-sign-in-alt ms-2"></i></h2>
                     </div>
                     <div class="card">
                         <div class="card-body">
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="form mb-3">
-                                    {{ form.full_name }}
-                                </div>
-                                <div class="form mb-3">
                                     {{ form.email }}
                                 </div>
                                 <div class="form mb-3">
-                                    {{ form.mobile }}
-                                </div>
-                                <div class="form mb-3">
                                     <div class="password-input">
-                                        {{ form.password1 }}
-                                    </div>
-                                </div>
-                                <div class="form mb-3">
-                                    <div class="password-input">
-                                        {{ form.password2 }}
+                                        {{ form.password }}
                                     </div>
                                 </div>
                                 <div class="form mb-3">
                                     {{ form.captcha }}
                                 </div>
+                                <div class="form form-check mb-3 text-start">
+                                    <input type="checkbox" class="form-check-input" id="remember" />
+                                    <label for="remember" class="form-check-label">Remember Me</label>
+                                </div>
                                 <div class="form mb-3">
-                                    <button type="submit" class="btn btn-success w-100">
-                                        Register <i class="fas fa-user-plus ms-2"></i>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        Login <i class="fas fa-sign-in-alt ms-2"></i>
                                     </button>
                                 </div>
-                                <span>Already have an account? <a href="{% url 'userauths:sign-in' %}">Login</a></span>
+                                <a class="forgot-password d-block mb-2" href="#">Forgot your password?</a>
+                                <span>Don't have an account yet? <a href="{% url 'userauths:sign-up' %}">Create account</a></span>
                             </form>
                         </div>
                     </div>

@@ -1,6 +1,12 @@
 from django.contrib import admin
 from store import models as store_models
 from .models import Order, OrderItem
+from django.utils.html import format_html
+
+
+admin.site.site_header = "EpicBargains"
+admin.site.site_title = "EpicBargains"
+admin.site.index_title = "Welcome to EpicBargains Dashboard"
 
 class GalleryInline(admin.TabularInline):
     model = store_models.Gallery
@@ -46,22 +52,36 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
 
+
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_id', 'get_customer_name', 'get_customer_phone', 'total', 'payment_status', 'order_status', 'payment_method', 'date']
-    list_editable = ['payment_status', 'order_status', 'payment_method']
-    search_fields = ['order_id', 'customer__username', 'customer__first_name', 'customer__last_name']
-    list_filter = ['payment_status', 'order_status', 'date']
+    list_display = [
+        'order_id', 'get_customer_name', 'get_customer_phone',
+        'total', 'payment_status', 'order_status', 'get_payment_method',
+        'receipt_uploaded', 'date'
+    ]
+    list_editable = ['payment_status', 'order_status']
+    search_fields = ['order_id', 'full_name', 'email', 'phone']
+    list_filter = ['payment_status', 'order_status', 'payment_method', 'date']
     inlines = [OrderItemInline]
 
     def get_customer_name(self, obj):
-        if obj.customer:
-            return f"{obj.customer.first_name} {obj.customer.last_name}"
-        return "-"
+        return obj.full_name or "-"
     get_customer_name.short_description = 'Customer Name'
 
     def get_customer_phone(self, obj):
-        return obj.customer.phone_number if obj.customer and hasattr(obj.customer, 'phone_number') else "-"
+        return obj.phone or "-"
     get_customer_phone.short_description = 'Phone Number'
+
+    def get_payment_method(self, obj):
+        return obj.get_payment_method_display() if obj.payment_method else "-"
+    get_payment_method.short_description = "Payment Method"
+
+    def receipt_uploaded(self, obj):
+        if obj.bank_receipt:
+            return format_html('<a href="{}" target="_blank">View Receipt</a>', obj.bank_receipt.url)
+        return "No"
+    receipt_uploaded.short_description = "Bank Receipt"
 
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['item_id', 'order', 'product', 'qty', 'price', 'total']

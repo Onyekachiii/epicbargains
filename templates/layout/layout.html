@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPICBARGAINS</title>
+    
     <!-- ..::Favicon::.. -->
     <link rel="apple-touch-icon"  href="/static/images/fav.png">
     <link rel="shortcut icon" type="image/x-icon"  href="/static/images/fav.png">
@@ -73,8 +74,14 @@
                         <div class="navbar-menu">
                             <ul>
                                 <li><a href="#">About Us</a></li>
-                                <li><a href="#">My Account</a></li>
+                                <li><a href="{% url 'customer:dashboard' %}">My Account</a></li>
                                 <li><a href="#">Whishlist</a></li>
+                                {% if request.user.is_authenticated %}
+                                <li><a href="{% url 'userauths:sign-out' %}">Sign Out</a></li>
+                                {% else %}
+                                <li><a href="{% url 'userauths:sign-in' %}">Sign in</a></li>
+                                <li><a href="{% url 'userauths:sign-up' %}">Register</a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     </nav>
@@ -128,15 +135,20 @@
                                         </li>
                                         <li class="dropdown-li"><a class="dropdown-link" href="/">Wishlist</a>
                                         </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Account</a>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="{% url 'customer:dashboard' %}">Account</a>
                                         </li>
                                         
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">FAQ's</a>
+                                    
+                                        {% if request.user.is_authenticated %}
+                                        <li class="dropdown-li"><a class="dropdown-link" href="{% url 'userauths:sign-out' %}">Sign out</a>
                                         </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Sign In</a>
+                                        {% else %}
+                                        <li class="dropdown-li"><a class="dropdown-link" href="{% url 'userauths:sign-in' %}">Sign in</a>
                                         </li>
-                                        <li class="dropdown-li"><a class="dropdown-link" href="/">Register</a>
+                                        <li class="dropdown-li"><a class="dropdown-link" href="{% url 'userauths:sign-up' %}">Register</a>
                                         </li>
+                                        {% endif %}
+                                        
                                     </ul>
                                 </li>
                                 
@@ -175,7 +187,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="/" class="account"><i class="rt-user-2"></i></a>
+                        <a href="{% url 'customer:dashboard' %}" class="account"><i class="rt-user-2"></i></a>
                         <div class="cart action-item">
                             <div class="cart-nav">
                                 <div class="cart-icon icon"><a href="{% url 'store:cart' %}"><i aria-hidden="true" class="fas fa-shopping-basket"></i></a><span class="wishlist-dot icon-dot total_cart_items">{{total_cart_items.count}}</span></div>
@@ -247,10 +259,14 @@
                     <ul class="sub-menu">
                         <li><a href=".">Cart</a></li>
                         <li><a href="/">Wishlist</a></li>
-                        <li><a href="/">Account</a></li>
-                        <li><a href="/">FAQ's</a></li>
-                        <li><a href="/">Sign In</a></li>
+                        <li><a href="{% url 'customer:dashboard' %}">Account</a></li>
+                        
+                        {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'userauths:sign-out' %}">Sign Out</a></li>
+                        {% else %}
+                        <li><a href="{% url 'userauths:sign-in' %}">Sign in</a></li>
                         <li><a href="{% url 'userauths:sign-up' %}">Register</a></li>
+                        {% endif %}
                         
                     </ul>
                 </li>

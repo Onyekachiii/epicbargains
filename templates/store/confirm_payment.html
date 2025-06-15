@@ -1,0 +1,58 @@
+{% extends '../layout/layout.html' %}
+
+{% block script %}
+        <script src="/static/js/vendors/zoom.js"></script> 
+{% endblock %} 
+
+{% block content %}
+
+<div class="page-path">
+    <div class="container">
+        <div class="breadcrumbs-inner">
+            <h1 class="path-title">Confirm Payment</h1>
+            <ul>
+                <li><a class="home-page-link" href="{% url 'store:checkout' %}">Checkout<i class="fal fa-angle-right"></i></a></li>
+                <li><a class="current-page" href="#">Confirm Payment</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--thanks-area start-->
+<div class="thanks-area">
+    <div class="container">
+        <div class="section-inner">
+            <div>
+
+                <p><strong>Total Amount:</strong> ₦ {{ order.total|floatformat:2|intcomma }}</p>
+                <br>
+
+                <p>Please transfer to:</p>
+                <ul>
+                    <li><strong>Bank:</strong> Zenith Bank</li>
+                    <li><strong>Account Name:</strong> Epic Bargains Enterprises</li>
+                    <li><strong>Account Number:</strong> 1229842622</li>
+                </ul>
+
+                <br>
+                <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                <br>
+                <p><b>NB:</b> Please include this Order ID in your bank payment remarks.</p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="receipt">Upload Transfer Receipt (PDF):</label>
+                    <input type="file" name="bank_receipt" required>
+                    <br><br>
+                    <div class="section-button">
+                        <button class="btn-1" type="submit">Submit Payment Proof</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--thanks-area end-->
+
+{% endblock content %}

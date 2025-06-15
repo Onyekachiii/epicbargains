@@ -1,0 +1,193 @@
+{% extends '../layout/layout.html' %}
+
+{% block content %}
+
+<style>
+    .account-inner {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+    }
+    
+    .account-sidebar {
+        width: 250px;
+        flex-shrink: 0;
+    }
+    
+    .account-main-area {
+        flex: 1;
+    }
+</style>
+    
+
+<div class="page-path">
+    <div class="container">
+        <div class="breadcrumbs-inner">
+            <h1 class="path-title">Dashboard</h1>
+            <ul>
+                <li><a class="home-page-link" href="{% url 'store:index' %}">Home<i class="fal fa-angle-right"></i></a></li>
+                <li><a class="current-page" href="#">Account</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="rts-account-section section-gap">
+    <div class="container">
+        <div class="account-inner">
+            <div class="account-sidebar">
+                {% include 'customer/sidebar.html' %}
+            </div>
+            <div class="account-main-area">
+                <div class="account-main dashboard filterd-items">
+                    <div class="account-profile-area">
+                        <div class="profile-dp"><img src="{{request.user.profile.image.url}}" alt="profile-dp" style="width: 100px; height: 100px; object-fit: cover;"></div>
+                        <div class="d-block">
+                            <span class="profile-name"><span>Hi,</span> {{request.user.profile.full_name}} </span>
+                            <span class="profile-date d-block"></span> {{request.user.id}} </span></span>
+                        </div>
+                    </div>
+                    <p>From your account dashboard you can view your recent orders, manage your shipping and billing
+                        addresses, and edit your password and account details.</p>
+
+                    <div class="activity-box">
+                        <div class="activity-item">
+                            <div class="icon"><i class="fas fa-box-check"></i></div>
+                            <span class="title">All Orders</span>
+                            <span class="value">{{orders.count}}</span>
+                        </div>
+                        <div class="activity-item">
+                            <div class="icon"><i class="fas fa-download"></i></div>
+                            <span class="title">Total Spent</span>
+                            <span class="value">₦ {{total_spent|floatformat:2}}</span>
+                        </div>
+                        <div class="activity-item">
+                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <span class="title">Address</span>
+                            <span class="value">{{request.user.profile.address}}</span>
+                        </div>
+                        <div class="activity-item">
+                            <div class="icon"><i class="fas fa-user"></i></div>
+                            <span class="title">Account Details</span>
+                            
+                        </div>
+                        <div class="activity-item">
+                            <div class="icon"><i class="fas fa-heart"></i></div>
+                            <span class="title">Wishlist</span>
+                            <span class="value"></span>
+                        </div>
+                        <a href="/" class="activity-item">
+                            <div class="icon"><i class="fas fa-sign-out-alt"></i></div>
+                            <span class="title">Logout</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="account-main orders filterd-items hide">
+                    <h2 class="mb--30">My Orders</h2>
+                    <table class="table">
+                        <thead>
+                            <tr class="top-tr">
+                                <th>Order</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{order.order_id}}</td>
+                                <td>{{order.date}}</td>
+                                <td>{{order.order_status}}</td>
+                                <td>₦ {{order.total}}</td>
+                                <td><a href="#" class="btn-small d-block">View</a></td>
+                            </tr>
+                            {% endfor%}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="account-main address filterd-items hide">
+                    <div class="row">
+                        <div class="col-xl-5 col-md-5">
+                            <div class="billing-address">
+                                <h2 class="mb--30">Address</h2>
+                                <address>
+                                    {% with user_address=request.user.address_set.first %}
+                                        {% if user_address %}
+                                            <span class="value">{{ user_address.address }}, {{ user_address.city }}, {{ user_address.state }}, {{ user_address.zip_code }}</span>
+                                        {% else %}
+                                            <span class="value">No address saved</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </address>
+                                
+                            
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="account-main accountdtls filterd-items hide">
+                    <div class="login-form">
+                        <div class="section-title">
+                            <h2>Account Details</h2>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="POST" enctype="multipart/form-data" action="{% url 'customer:update_profile' %}">
+                                    {% csrf_token %}
+                                    <div class="form">
+                                        <label for="full_name">Full Name</label>
+                                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ request.user.profile.full_name }}" required>
+                                    </div>
+                                    <div class="form">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required>
+                                    </div>
+                                    <div class="form">
+                                        <label for="mobile">Phone Number</label>
+                                        <input type="text" class="form-control" id="mobile" name="mobile" value="{{ request.user.profile.mobile }}" required>
+                                    </div>
+                                    <div class="form">
+                                        <label for="address">Street Address</label>
+                                        <input type="text" class="form-control" id="address" name="address" value="{{ user_address.address }}">
+                                    </div>
+                                    <div class="form">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" name="city" value="{{ user_address.city }}">
+                                    </div>
+                                    <div class="form">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" value="{{ user_address.state }}">
+                                    </div>
+                                    <div class="form">
+                                        <label for="zip_code">Zip Code</label>
+                                        <input type="text" class="form-control" id="zip_code" name="zip_code" value="{{ user_address.zip_code }}">
+                                    </div>
+                                    <div class="form">
+                                        <label for="country">Country</label>
+                                        <input type="text" class="form-control" id="country" name="country" value="{{ user_address.country }}">
+                                    </div>
+                                    <div class="form">
+                                        <label for="image">Profile Picture</label>
+                                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                        <br>
+                                        <img src="{{ request.user.profile.image.url }}" alt="Current Profile Image" width="100" height="100" style="object-fit: cover;">
+                                    </div>
+                                    <div class="form">
+                                        <button type="submit" class="btn btn-primary">Update Details</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

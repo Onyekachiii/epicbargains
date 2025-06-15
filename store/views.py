@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.db import models
@@ -24,7 +24,7 @@ import razorpay
 # from plugin.paginate_queryset import paginate_queryset
 from store import context
 from store import models as store_models
-from store.models import Category
+from store.models import Category, Order
 from customer import models as customer_models
 from userauths import models as userauths_models
 # from plugin.tax_calculation import tax_calculation
@@ -205,19 +205,18 @@ def add_to_cart(request):
     )
     })
 
-
+@login_required
 def cart(request):
-    cart_id = request.session.get('cart_id')
-
-    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
-    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
+    # Only show cart items belonging to this user
+    items = store_models.Cart.objects.filter(user=request.user)
+    cart_sub_total = items.aggregate(sub_total=Sum("sub_total"))['sub_total'] or 0
 
     try:
         addresses = customer_models.Address.objects.filter(user=request.user)
     except:
         addresses = None
 
-    if not items:
+    if not items.exists():
         messages.warning(request, "No item in cart")
         return redirect("store:index")
 
@@ -229,6 +228,7 @@ def cart(request):
     return render(request, "store/cart.html", context)
 
 
+@login_required
 def delete_cart_item(request):
     id = request.GET.get("id")
     item_id = request.GET.get("item_id")
@@ -258,11 +258,15 @@ def delete_cart_item(request):
     })
 
 
+from django.urls import reverse  # Add this import
 
+@login_required
 def create_order(request):
-    customer=request.user,
+    customer = request.user
+    profile = customer.profile
+
     cart_id = request.session.get('cart_id')
-    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=customer))
 
     if not items.exists():
         messages.warning(request, "Your cart is empty.")
@@ -275,27 +279,26 @@ def create_order(request):
         form = CartOrderRequestForm(request.POST)
 
         if form.is_valid():
-            # Create order with form and cart data
-            order = store_models.Order()
-            order.customer = request.user
-            order.sub_total = cart_sub_total
-            order.shipping = cart_shipping_total
-            order.tax = Decimal(0)
-            order.service_fee = Decimal(0)
-            order.total = order.sub_total + order.shipping + order.tax + order.service_fee
+            payment_method = request.POST.get('payment_method')
 
-            # Fill order with form data
-            order.first_name = form.cleaned_data['first_name']
-            order.last_name = form.cleaned_data['last_name']
-            order.email = form.cleaned_data['email']
-            order.phone = form.cleaned_data['phone_number']
-            order.address = form.cleaned_data['street_address']
-            order.city = form.cleaned_data['city']
-            order.zip_code = form.cleaned_data['zip_code']
-            order.note = form.cleaned_data.get('note', '')
-            order.save()
+            order = store_models.Order.objects.create(
+                customer=customer,
+                sub_total=cart_sub_total,
+                shipping=cart_shipping_total,
+                tax=Decimal(0),
+                service_fee=Decimal(0),
+                total=cart_sub_total + cart_shipping_total,
+                payment_method=payment_method,
+                full_name=form.cleaned_data['full_name'],
+                email=form.cleaned_data['email'],
+                phone=form.cleaned_data['mobile'],
+                address=form.cleaned_data['address'],
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code'],
+                note=form.cleaned_data.get('notes', '')
+            )
 
-            # Create order items
+            # Save order items
             for item in items:
                 store_models.OrderItem.objects.create(
                     order=order,
@@ -310,14 +313,30 @@ def create_order(request):
                     initial_total=item.total,
                 )
 
-            # Optional: Clear the cart after order
-            items.delete()
-            messages.success(request, "Your order has been placed successfully.")
-            return redirect("store:checkout")
+            # Update profile
+            if not profile.full_name:
+                profile.full_name = order.full_name
+            if not profile.mobile:
+                profile.mobile = order.phone
+            profile.save()
+
+            # ✅ Handle payment method flow
+            if payment_method == 'bank':
+                return redirect('store:confirm_payment', order_id=order.order_id)
+            else:
+                # COD or Flutterwave
+                items.delete()
+                messages.success(request, "Your order has been placed successfully.")
+                return redirect('store:checkout_success')
         else:
             messages.warning(request, "Please correct the errors in the form.")
     else:
-        form = CartOrderRequestForm()
+        initial_data = {
+            'full_name': profile.full_name,
+            'email': profile.user.email,
+            'mobile': profile.mobile,
+        }
+        form = CartOrderRequestForm(initial=initial_data)
 
     return render(request, "store/checkout.html", {
         'form': form,
@@ -327,100 +346,29 @@ def create_order(request):
     })
 
 
-# def create_order(request):
-#     if request.method == "POST":
-#         address_id = request.POST.get("address")
-#         if not address_id:
-#             messages.warning(request, "Please select an address to continue")
-#             return redirect("store:cart")
-        
-#         address = customer_models.Address.objects.filter(user=request.user, id=address_id).first()
+@login_required
+def confirm_payment(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
 
-#         if "cart_id" in request.session:
-#             cart_id = request.session['cart_id']
-#         else:
-#             cart_id = None
+    if request.method == 'POST':
+        order.bank_receipt = request.FILES.get('bank_receipt')
+        order.payment_method = request.POST.get("payment_method")
+        order.payment_status = 'Pending'
+        order.save()
 
-#         items = store_models.Cart.objects.filter(Q(cart_id=cart_id)|Q(user=request.user) if request.user.is_authenticated else Q(cart_id=cart_id))
-#         cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id)|Q(user=request.user) if request.user.is_authenticated else Q(cart_id=cart_id)).aggregate(sub_total = models.Sum("sub_total"))['sub_total']
-#         cart_shipping_total = store_models.Cart.objects.filter(cart_id=cart_id).aggregate(shipping = models.Sum("shipping"))['shipping']
-        
-#         order = store_models.Order()
-#         order.sub_total = cart_sub_total
-#         order.customer = request.user
-#         order.address = address
-#         order.shipping = cart_shipping_total
-#         order.total = order.sub_total + order.shipping + Decimal(order.tax)
-#         order.total += order.service_fee
-#         order.save()
+        # Delete cart items now
+        store_models.Cart.objects.filter(user=request.user).delete()
 
-#         for i in items:
-#             store_models.OrderItem.objects.create(
-#                 order=order,
-#                 product=i.product,
-#                 qty=i.qty,
-#                 color=i.color,
-#                 size=i.size,
-#                 price=i.price,
-#                 sub_total=i.sub_total,
-#                 shipping=i.shipping,
-#                 # tax=tax_calculation(address.country, i.sub_total),
-#                 total=i.total,
-#                 initial_total=i.total,
-                
-#             )
-    
-#     return redirect("store:checkout", order.order_id)
+        messages.success(request, f"Your order {order.order_id} has been submitted. We'll confirm your payment shortly.")
+        return redirect('store:checkout_success')
 
-# def coupon_apply(request, order_id):
-#     print("Order Id ========", order_id)
-    
-#     try:
-#         order = store_models.Order.objects.get(order_id=order_id)
-#         order_items = store_models.OrderItem.objects.filter(order=order)
-#     except store_models.Order.DoesNotExist:
-#         messages.error(request, "Order not found")
-#         return redirect("store:cart")
+    return render(request, 'store/confirm_payment.html', {'order': order})
 
-#     if request.method == 'POST':
-#         coupon_code = request.POST.get("coupon_code")
-        
-#         if not coupon_code:
-#             messages.error(request, "No coupon entered")
-#             return redirect("store:checkout", order.order_id)
-            
-#         try:
-#             coupon = store_models.Coupon.objects.get(code=coupon_code)
-#         except store_models.Coupon.DoesNotExist:
-#             messages.error(request, "Coupon does not exist")
-#             return redirect("store:checkout", order.order_id)
-        
-#         if coupon in order.coupons.all():
-#             messages.warning(request, "Coupon already activated")
-#             return redirect("store:checkout", order.order_id)
-#         else:
-#             # Assuming coupon applies to specific vendor items, not globally
-#             total_discount = 0
-#             for item in order_items:
-#                 if coupon.vendor == item.product.vendor and coupon not in item.coupon.all():
-#                     item_discount = item.total * coupon.discount / 100  # Discount for this item
-#                     total_discount += item_discount
 
-#                     # item.coupon.add(coupon) 
-#                     item.total -= item_discount
-#                     item.saved += item_discount
-#                     item.save()
+@login_required
+def checkout_success(request):
+    return render(request, "store/checkout_success.html")
 
-#             # Apply total discount to the order after processing all items
-#             if total_discount > 0:
-#                 order.coupons.add(coupon)
-#                 order.total -= total_discount
-#                 order.sub_total -= total_discount
-#                 order.saved += total_discount
-#                 order.save()
-        
-#         messages.success(request, "Coupon Activated")
-#         return redirect("store:checkout", order.order_id)
 
 # def checkout(request, order_id):
 #     order = store_models.Order.objects.get(order_id=order_id)
@@ -452,165 +400,8 @@ def create_order(request):
 
 #     return render(request, "store/checkout.html", context)
 
-# @csrf_exempt
-# def stripe_payment(request, order_id):
-#     order = store_models.Order.objects.get(order_id=order_id)
-#     stripe.api_key = settings.STRIPE_SECRET_KEY
 
-#     checkout_session = stripe.checkout.Session.create(
-#         customer_email = order.address.email,
-#         payment_method_types=['card'],
-#         line_items = [
-#             {
-#                 'price_data': {
-#                     'currency': 'USD',
-#                     'product_data': {
-#                         'name': order.address.full_name
-#                     },
-#                     'unit_amount': int(order.total * 100)
-#                 },
-#                 'quantity': 1
-#             }
-#         ],
-#         mode = 'payment',
-#         success_url = request.build_absolute_uri(reverse("store:stripe_payment_verify", args=[order.order_id])) + "?session_id={CHECKOUT_SESSION_ID}" + "&payment_method=Stripe",
-#         cancel_url = request.build_absolute_uri(reverse("store:stripe_payment_verify", args=[order.order_id]))
-#     )
-
-#     print("checkkout session", checkout_session)
-#     return JsonResponse({"sessionId": checkout_session.id})
-
-# def stripe_payment_verify(request, order_id):
-#     order = store_models.Order.objects.get(order_id=order_id)
-
-#     session_id = request.GET.get("session_id")
-#     session = stripe.checkout.Session.retrieve(session_id)
-
-#     if session.payment_status == "paid":
-#         if order.payment_status == "Processing":
-#             order.payment_status = "Paid"
-#             order.save()
-#             clear_cart_items(request)
-#             customer_models.Notifications.objects.create(type="New Order", user=request.user)
-#             customer_merge_data = {
-#                 'order': order,
-#                 'order_items': order.order_items(),
-#             }
-#             subject = f"New Order!"
-#             text_body = render_to_string("email/order/customer/customer_new_order.txt", customer_merge_data)
-#             html_body = render_to_string("email/order/customer/customer_new_order.html", customer_merge_data)
-
-#             msg = EmailMultiAlternatives(
-#                 subject=subject, from_email=settings.FROM_EMAIL,
-#                 to=[order.address.email], body=text_body
-#             )
-#             msg.attach_alternative(html_body, "text/html")
-#             msg.send()
-
-#             # Send Order Emails to Vendors
-#             for item in order.order_items():
-                
-#                 vendor_merge_data = {
-#                     'item': item,
-#                 }
-#                 subject = f"New Order!"
-#                 text_body = render_to_string("email/order/vendor/vendor_new_order.txt", vendor_merge_data)
-#                 html_body = render_to_string("email/order/vendor/vendor_new_order.html", vendor_merge_data)
-
-#                 msg = EmailMultiAlternatives(
-#                     subject=subject, from_email=settings.FROM_EMAIL,
-#                     to=[item.vendor.email], body=text_body
-#                 )
-#                 msg.attach_alternative(html_body, "text/html")
-#                 msg.send()
-
-#             return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
     
-#     return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
-    
-# def get_paypal_access_token():
-#     token_url = 'https://api.sandbox.paypal.com/v1/oauth2/token'
-#     data = {'grant_type': 'client_credentials'}
-#     auth = (settings.PAYPAL_CLIENT_ID, settings.PAYPAL_SECRET_ID)
-#     response = requests.post(token_url, data=data, auth=auth)
-
-#     if response.status_code == 200:
-#         return response.json()['access_token']
-#     else:
-#         raise Exception(f'Failed to get access token from PayPal. Status code: {response.status_code}') 
-
-# def paypal_payment_verify(request, order_id):
-#     order = store_models.Order.objects.get(order_id=order_id)
-
-#     transaction_id = request.GET.get("transaction_id")
-#     paypal_api_url = f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}'
-#     headers = {
-#         'Content-Type': 'application/json',
-#         'Authorization': f'Bearer {get_paypal_access_token()}',
-#     }
-#     response = requests.get(paypal_api_url, headers=headers)
-
-#     if response.status_code == 200:
-#         paypal_order_data = response.json()
-#         paypal_payment_status = paypal_order_data['status']
-#         if paypal_payment_status == 'COMPLETED':
-#             if order.payment_status == "Processing":
-#                 order.payment_status = "Paid"
-#                 payment_method = request.GET.get("payment_method")
-#                 order.payment_method = payment_method
-#                 order.save()
-#                 clear_cart_items(request)
-#                 return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
-#     else:
-#         return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
-
-# @csrf_exempt
-# def razorpay_payment_verify(request, order_id):
-#     order = store_models.Order.objects.get(order_id=order_id)
-#     payment_method = request.GET.get("payment_method")
-
-#     if request.method == "POST":
-#         data = request.POST
-
-#         # Extract payment data
-#         razorpay_order_id = data.get('razorpay_order_id')
-#         razorpay_payment_id = data.get('razorpay_payment_id')
-#         razorpay_signature = data.get('razorpay_signature')
-
-#         print("razorpay_order_id: ====", razorpay_order_id)
-#         print("razorpay_payment_id: ====", razorpay_payment_id)
-#         print("razorpay_signature: ====", razorpay_signature)
-
-#         params_dict = {
-#             'razorpay_order_id': razorpay_order_id,
-#             'razorpay_payment_id': razorpay_payment_id,
-#             'razorpay_signature': razorpay_signature
-#         }
-
-#         # Verify the payment signature
-#         razorpay_client.utility.verify_payment_signature({
-#             'razorpay_order_id': razorpay_order_id,
-#             'razorpay_payment_id': razorpay_payment_id,
-#             'razorpay_signature': razorpay_signature
-#         })
-
-#         razorpay_client.utility.verify_payment_signature(params_dict)
-
-#         # Success response
-#         if order.payment_status == "Processing":
-#             order.payment_status = "Paid"
-#             order.payment_method = payment_method
-#             order.save()
-#             clear_cart_items(request)
-#             customer_models.Notifications.objects.create(type="New Order", user=request.user)
-#             for item in order.order_items():
-#                 vendor_models.Notifications.objects.create(type="New Order", user=item.vendor)
-
-#             return redirect(f"/payment_status/{order.order_id}/?payment_status=paid")
-
-        
-
-#     return redirect(f"/payment_status/{order.order_id}/?payment_status=failed")
 
 # def paystack_payment_verify(request, order_id):
 #     order = store_models.Order.objects.get(order_id=order_id)
