@@ -9,11 +9,7 @@ class CartOrderRequestForm(forms.Form):
         max_length=100,
         widget=forms.TextInput(attrs={'placeholder': 'Town/City**'})
     )
-    zip_code = forms.CharField(
-        max_length=20,
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Zip Code (Optional)'})
-    )
+   
     address = forms.CharField(
         max_length=255,
         widget=forms.TextInput(attrs={'placeholder': 'Street Address**'})

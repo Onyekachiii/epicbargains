@@ -170,7 +170,7 @@
                 {% for c in categories %}
                 <div class="swiper-slide">
                     <div class="collection-item">
-                        <a href="/"><img src="{{c.image.url}}" style="width: 338px; height:450px;" alt="collection-image">
+                        <a href="/"><img src="{{c.image.url}}" class="img-fluid category-img" alt="collection-image">
                         </a>
                         <p class="item-quantity">{{c.count}} <span>items</span></p>
                         <a href="/" class="item-catagory-box">
@@ -206,9 +206,9 @@
                     <div class="swiper-slide">
                         <div class="product-item element-item1">
                             <a href="{% url 'store:product_detail' p.slug %}" class="product-image image-hover-variations">
-                                <div class="image-vari1 image-vari"><img src="{{p.image.url}}"  style="width: 338px; height:450px;" alt="product-image">
+                                <div class="image-vari1 image-vari"><img src="{{p.image.url}}" class="img-fluid product-img" alt="product-image">
                                 </div>
-                                <div class="image-vari2 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
+                                <div class="image-vari2 image-vari"><img src="{{p.image.url}}" class="img-fluid product-img" alt="product-image">
                                 </div>
                             </a>
                             <div class="bottom-content">
@@ -301,9 +301,9 @@
                 <div class="col-xl-3 col-md-4 col-sm-6 col-12">
                     <div class="product-item element-item1">
                         <a href="{% url 'store:product_detail' p.slug %}" class="product-image image-hover-variations">
-                            <div class="image-vari1 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
+                            <div class="image-vari1 image-vari"><img src="{{p.image.url}}" class="img-fluid product-img" alt="product-image">
                             </div>
-                            <div class="image-vari2 image-vari"><img src="{{p.image.url}}" style="width: 338px; height:450px;" alt="product-image">
+                            <div class="image-vari2 image-vari"><img src="{{p.image.url}}" class="img-fluid product-img" alt="product-image">
                             </div>
                         </a>
                         <div class="bottom-content">

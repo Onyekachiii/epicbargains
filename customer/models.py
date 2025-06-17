@@ -28,11 +28,11 @@ class Address(models.Model):
     full_name = models.CharField(max_length=200, null=True, blank=True, default=None)
     mobile = models.CharField(max_length=50, null=True, blank=True, default=None)
     email = models.CharField(max_length=100, null=True, blank=True, default=None)
-    country = models.CharField(max_length=100, null=True, blank=True, default=None)
+    
     state = models.CharField(max_length=100, null=True, blank=True, default=None)
     city = models.CharField(max_length=100, null=True, blank=True, default=None)
     address = models.CharField(max_length=100, null=True, blank=True, default=None)
-    zip_code = models.CharField(max_length=100, null=True, blank=True, default=None)
+    
     
     class Meta:
         verbose_name_plural = "Customer Address"

@@ -11429,6 +11429,23 @@ tr:first-child {
   filter: brightness(100);
 }
 
+.category-img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+
 .rts-services-section .service-item {
   padding: 25px;
   border: 1px solid #e9eef3;

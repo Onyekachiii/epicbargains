@@ -335,6 +335,7 @@ def create_order(request):
             'full_name': profile.full_name,
             'email': profile.user.email,
             'mobile': profile.mobile,
+            # 'address': profile.address,
         }
         form = CartOrderRequestForm(initial=initial_data)
 

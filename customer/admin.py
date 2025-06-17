@@ -5,7 +5,7 @@ from customer import models as customer_models
 
 
 class AddressAdmin(ImportExportModelAdmin):
-    list_display = ['user', 'full_name', 'email', 'mobile', 'country', 'state', 'city', 'address', 'zip_code']
+    list_display = ['user', 'full_name', 'email', 'mobile', 'state', 'city', 'address']
     search_fields = ['full_name', 'email', 'mobile', 'user__email']
 
 

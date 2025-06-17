@@ -51,8 +51,6 @@ def update_profile(request):
         address.address = request.POST.get('address')
         address.city = request.POST.get('city')
         address.state = request.POST.get('state')
-        address.zip_code = request.POST.get('zip_code')
-        address.country = request.POST.get('country')
         address.full_name = profile.full_name
         address.email = user.email
         address.mobile = profile.mobile
